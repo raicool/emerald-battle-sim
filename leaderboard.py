@@ -1,4 +1,3 @@
-from curses import meta
 from datetime import datetime
 from enum import IntEnum
 import utils
@@ -12,6 +11,7 @@ class __site_theme(IntEnum):
 
 THEME: int = __site_theme.LIGHT
 BOX_SPRITE_URL: str = "https://raw.githubusercontent.com/msikma/pokesprite/master/pokemon-gen7x/"
+LEAGUE_SPRITE_URL: str = "https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/"
 
 HTML_HEADER = f"""\
 <!DOCTYPE html>
@@ -54,7 +54,7 @@ def __table_header_button(label: str, sort: bool = False) -> str:
 	)
 
 def __table_data_trainer_name(_trainer: trainer):
-	player_page: str = f"player&id={str(_trainer["id"])}"
+	player_page: str = f"player.html?id={str(_trainer["id"])}"
 	return str(
 		"<td>"
 			+f"<a href=\"{player_page}\">{_trainer["name"]}</a>"
@@ -88,9 +88,9 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 					+f"<script type=\"text/javascript\" src=\"timestamp.js\" idx={idx} last_match={_trainer.get("last_match", 0)}></script>" # Time since last played
 				+"</td>" 
 				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
-				+f"<td><img src=\"sprites/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
+				+f"<td><img src=\"sprites/mugshot/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
 				+__table_data_trainer_name(_trainer) # Name
-				+f"<td>{0}</td>" # League
+				+f"<td class=image><img class=p src=\"{LEAGUE_SPRITE_URL}{_trainer["league"]}.png\"></td>" # League
 				+f"<td><code>{_trainer["id"]}</code></td>" # UUID
 				+__table_data_pokemon_boxsprite(_trainer["party"]) # Party
 				+f"<td>{int(_trainer["elo"])}</td>" # Points

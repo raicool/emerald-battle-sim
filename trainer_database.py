@@ -3,12 +3,12 @@ from datetime import datetime
 import json
 import os
 import random
-import uuid
+import shutil
 from elo import calc_game_results
 import elo
 import log
 from poke_data import get_trainer_pic_id
-from pokemon import construct_trainer_json, trainer, trainermon
+from pokemon import construct_trainer_json, trainer
 import utils
 
 
@@ -25,6 +25,7 @@ class trainer_database:
 		trainers_json = open("dump/trainers.json", "w")
 		json.dump(self.db, trainers_json)
 		trainers_json.close()
+		shutil.copy("dump/trainers.json", "website/html/trainers.json")
 	
 	def __trainer_struct_from_list_obj(self, entry: list):
 		_temp: trainer = trainer()
@@ -34,6 +35,7 @@ class trainer_database:
 		_temp.wins = entry.get("wins", 0)
 		_temp.losses = entry.get("losses", 0)
 		_temp.elo = entry.get("elo", 1000)
+		_temp.league = entry.get("league", "")
 		_temp.rank = entry.get("rank", 0)
 		_temp.last_match = entry.get("last_match", 0)
 		_temp.trainer_class = entry.get("trainer_class", 0)
@@ -118,12 +120,14 @@ class trainer_database:
 
 			self.db[winner]["last_match"] = timestamp
 			self.db[winner]["elo"] = new_elos[0].elo
+			self.db[winner]["league"] = new_elos[0].league
 			self.db[winner]["battles"] = new_elos[0].battles
 			self.db[winner]["wins"] = new_elos[0].wins
 			elos[winner] = new_elos[0].elo
 
 			self.db[loser]["last_match"] = timestamp
 			self.db[loser]["elo"] = new_elos[1].elo
+			self.db[loser]["league"] = new_elos[1].league
 			self.db[loser]["battles"] = new_elos[1].battles
 			self.db[loser]["losses"] = new_elos[1].losses
 			elos[loser] = new_elos[1].elo

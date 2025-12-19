@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from enum import IntEnum
 import json
 import os
 import random
@@ -61,6 +60,7 @@ class trainer:
 	wins: int = 0
 	losses: int = 0
 	elo: int = 1000
+	league: str = ""
 	rank: int = 0
 	# unix timestamp
 	last_match: int = 0

@@ -1,7 +1,7 @@
 from datetime import datetime
+from enum import IntEnum
 import json
 import math
-import os
 import log
 from pokemon import trainer
 import utils
@@ -24,6 +24,15 @@ LOSS_CURVE: float = 0.85
 # games than PLACEMENT_MATCHES 
 SMURF_GAME_LOSSRATE: float = 0.85
 PLACEMENT_MATCHES: int = 4
+
+leagues: dict[float, str] = {
+	0: "poke",
+	1100: "great",
+	1200: "ultra",
+	1300: "premier",
+	1400: "master",
+	1500: "beast"
+}
 
 def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> tuple[trainer, trainer]:
 	if (recalc == False):
@@ -48,10 +57,16 @@ def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> 
 		loser_loss *= 0.5
 	
 	winner.elo += winner_gain
+	for elo_min, league in leagues.items():
+		if (winner.elo >= elo_min):
+			winner.league = league
 	winner.battles += 1
 	winner.wins += 1
 		
 	loser.elo += loser_loss
+	for elo_min, league in leagues.items():
+		if (loser.elo >= elo_min):
+			loser.league = league
 	loser.battles += 1
 	loser.losses += 1
 
