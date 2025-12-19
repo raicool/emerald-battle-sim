@@ -4,12 +4,27 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
 
 ![](image.png)
 
+* [prerequesites](#prerequesites)
+* [usage](#usage)
+    * [creating players](#creating-players)
+    * [running](#running)
+* [todo list](#todo-list)
+
 ## prerequesites
 - custom branch of pokeemerald-expansion
     - copy the debug elf file `pokeemerald.elf` and linker map `pokeemerald.map` into the project's res folder
     - i cannot provide prebuilt roms for obvious reasons. build instructions are in the fork readme
 - devkitpro installed (recommended to also have devkitARM's gdb executable in your PATHs located in `(devkitpro dir)/devkitARM/bin/`)
+- a build of mgba coppied into `res/mgba`
 
+## usage
+### creating players
+- in order to add players, run `pokemon.py`
+    - there are a couple of variables that can be adjusted
+        - `SHINY_ODDS`: adjusts the chance of trainer's pokemon to be a shiny `(1 / SHINY_ODDS)`
+        - `PLAYER_COUNT`: amount of players that will be added to the player pool
+### running
+- once players have been added, run `main.py`
 ### todo list
 - [ ] remove requirement for a custom fork of pokeemerald-expansion 
 
