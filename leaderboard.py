@@ -53,6 +53,14 @@ def __table_header_button(label: str, sort: bool = False) -> str:
 		"</th>"
 	)
 
+def __table_data_trainer_name(_trainer: trainer):
+	player_page: str = f"player&id={str(_trainer["id"])}"
+	return str(
+		"<td>"
+			+f"<a href=\"{player_page}\">{_trainer["name"]}</a>"
+		+"</td>"
+	)
+
 def __table_data_pokemon_boxsprite(mon_data: str) -> str:
 	_pkmn: trainermon = utils.json2obj(mon_data)
 	_mon_name: str = strings.pokemon[_pkmn.species].lower()
@@ -78,7 +86,7 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 				+"</td>" # Time since last played
 				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
 				+f"<td><img src=\"sprites/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
-				+f"<td>{_trainer["name"]}</td>" # Name
+				+__table_data_trainer_name(_trainer) # Name
 				+f"<td>{0}</td>" # League
 				+f"<td><code>{_trainer["id"]}</code></td>" # UUID
 				+__table_data_pokemon_boxsprite(_trainer["party"][0])

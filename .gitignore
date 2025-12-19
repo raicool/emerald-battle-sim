@@ -2,7 +2,7 @@ __pycache__
 
 *.zip
 *.exe
-*.html
+leaderboard.html
 
 # gba binary/linker map/sram
 *.elf
