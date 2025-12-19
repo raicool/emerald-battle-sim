@@ -23,6 +23,8 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
     - there are a couple of variables that can be adjusted
         - `SHINY_ODDS`: adjusts the chance of trainer's pokemon to be a shiny `(1 / SHINY_ODDS)`
         - `PLAYER_COUNT`: amount of players that will be added to the player pool
+        - `DEFAULT_TRAINER_AI_FLAGS`: the default ai flags that trainers will use
+            - explaination of each ai flag are inside of the `__ai_flags` enum inside of `poke_data.py`, but they mostly dont need to be changed
 ### running
 - once players have been added, run `main.py`
 ### todo list

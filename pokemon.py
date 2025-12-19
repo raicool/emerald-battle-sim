@@ -22,8 +22,7 @@ TRAINER_NAME_LENGTH: int = 10
 MAX_TRAINER_ITEMS: int = 4
 # chance of a shiny = 1 / SHINY_ODDS
 SHINY_ODDS: int = 40
-
-pokemon_json: dict = requests.get("https://pokeapi.co/api/v2/pokemon?limit=100000")
+PLAYER_COUNT: int = 500
 
 @dataclass
 class rng:
@@ -278,7 +277,7 @@ def main():
 	trainer_mons_txt = open("dump/trainer_mons.txt", "w+")
 
 	trainers: dict = {}
-	for _ in range(500):
+	for _ in range(PLAYER_COUNT):
 		gender: int = random.randint(0, 1)
 		test_trainer: trainer = trainer()
 
