@@ -23,8 +23,6 @@ from trainer_database import trainer_database
 MGBA_PATH: str = "res/mgba/mgba.exe"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
-BATTLE_SCRIPT: str = "res/battle.lua"
-
 GAME_FASTFORWARD: bool = True
 FRAME_SIZE: int = 4
 
