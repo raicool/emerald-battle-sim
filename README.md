@@ -1,6 +1,7 @@
 # emerald-battle-sim
 
 Pokemon emerald battle simulator with a fully functioning elo system and leaderboard
+*Inspired by pimanrules' pokemon crystal elo world (https://github.com/jsettlem/elo_world_pokemon_crystal)*
 
 ![](image.png)
 
