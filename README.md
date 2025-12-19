@@ -2,7 +2,7 @@
 
 Pokemon emerald battle simulator with a fully functioning elo system and leaderboard
 
-![alt text](image.png)
+![](image.png)
 
 ## prerequesites
 - custom branch of pokeemerald-expansion
@@ -12,3 +12,5 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
 
 ### todo list
 - [ ] remove requirement for a custom fork of pokeemerald-expansion 
+
+![](image-lb.png)
