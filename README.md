@@ -27,6 +27,7 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
             - explaination of each ai flag are inside of the `__ai_flags` enum inside of `poke_data.py`, but they mostly dont need to be changed
 ### running
 - once players have been added, run `main.py`
+- saved information about the leaderboard are stored in the `dump/` directory, and a viewable html page of the leaderboard is stored at `website/html/leaderboard.html`
 ### todo list
 - [ ] remove requirement for a custom fork of pokeemerald-expansion 
 
