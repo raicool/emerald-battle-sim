@@ -36,7 +36,7 @@ HTML_HEADER = f"""\
 			}}
 		</style>
 	</head>
-	<body>
+	<body style="margin:0px; padding:0px;">
 		<div class="markdown-body" style="max-width:100%;">
 """
 
