@@ -14,7 +14,7 @@ import leaderboard
 import log
 
 from matchmaking import find_match
-from poke_data import __BattleOutcomeWinner, __BattleBGMs
+from poke_data import __BattleOutcomeWinner, __BattleBGMs, __BattleBGM_RankOne
 from pokemon import gdb_trainerdata, gdb_partydata, rng, trainer
 from trainer_database import trainer_database
 
@@ -26,7 +26,7 @@ ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
 BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss0"
 BATTLE_SCRIPT: str = "res/battle.lua"
 
-GAME_FASTFORWARD: bool = False
+GAME_FASTFORWARD: bool = True
 FRAME_SIZE: int = 4
 
 if (GAME_FASTFORWARD):
@@ -107,7 +107,10 @@ def main():
 		# set the battle details to right trainer's preferred settings
 		__gBattleEnvironment = trainer_right.battle_environment
 		__gBattleTransition = trainer_right.battle_transition
-		__gBattleMusic = __BattleBGMs[trainer_right.battle_music]
+		if (trainer_right.rank == 1):
+			__gBattleMusic = __BattleBGM_RankOne
+		else:
+			__gBattleMusic = __BattleBGMs.get(trainer_right.battle_music, __BattleBGMs["BATTLE_BGM_HOENN_TRAINER"])
 		__gRngValue.a = random.randint(0, 0xffffffff)
 		__gRngValue.b = random.randint(0, 0xffffffff)
 		__gRngValue.c = random.randint(0, 0xffffffff)
