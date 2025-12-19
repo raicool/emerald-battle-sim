@@ -77,7 +77,7 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 					+f"<script type=\"text/javascript\" src=\"timestamp.js\" idx={idx} last_match={_trainer.get("last_match", 0)}></script>"
 				+"</td>" # Time since last played
 				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
-				+f"<td><img src=\"sprites/{_trainer["trainer_class"]}.png\" class=mugshot></td>" # Class
+				+f"<td><img src=\"sprites/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
 				+f"<td>{_trainer["name"]}</td>" # Name
 				+f"<td>{0}</td>" # League
 				+f"<td><code>{_trainer["id"]}</code></td>" # UUID

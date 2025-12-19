@@ -94,7 +94,7 @@ class trainer_database:
 			player["wins"] = 0
 			player["losses"] = 0
 			player["elo"] = 1000
-			player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
+			#player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
 
 		elos: dict[int, float] = {}
 		while split := battle_log.readline().rsplit():
