@@ -26,19 +26,22 @@ ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
 BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss0"
 BATTLE_SCRIPT: str = "res/battle.lua"
 
-# normal speed settings
-#AUDIO_SYNC: bool = True
-#VIDEO_SYNC: bool = True
-#FPS_TARGET: int = 60
-#GAME_VOLUME: int = 100
-
-# fast settings
-AUDIO_SYNC: bool = False
-VIDEO_SYNC: bool = False
-FPS_TARGET: int = 25565
-GAME_VOLUME: int = 0
-
+GAME_FASTFORWARD: bool = False
 FRAME_SIZE: int = 4
+
+if (GAME_FASTFORWARD):
+	# fast settings
+	AUDIO_SYNC: bool = False
+	VIDEO_SYNC: bool = False
+	FPS_TARGET: int = 25565
+	GAME_VOLUME: int = 0
+else:
+	# normal speed settings
+	AUDIO_SYNC: bool = True
+	VIDEO_SYNC: bool = True
+	FPS_TARGET: int = 59.7275
+	GAME_VOLUME: int = 100
+
 
 def call_mgba() -> subprocess.Popen:
 	settings: str = "-C audioSync={} -C videoSync={} -C fpsTarget={} -C volume={} -C frameSize={}".format(
