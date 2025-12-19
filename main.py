@@ -23,7 +23,6 @@ from trainer_database import trainer_database
 MGBA_PATH: str = "res/mgba/mgba.exe"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
-BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss0"
 BATTLE_SCRIPT: str = "res/battle.lua"
 
 GAME_FASTFORWARD: bool = True
@@ -31,12 +30,14 @@ FRAME_SIZE: int = 4
 
 if (GAME_FASTFORWARD):
 	# fast settings
+	BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss0"
 	AUDIO_SYNC: bool = False
 	VIDEO_SYNC: bool = False
 	FPS_TARGET: int = 25565
 	GAME_VOLUME: int = 0
 else:
 	# normal speed settings
+	BATTLE_SAVESTATE: str = "res/startbattle.ss0"
 	AUDIO_SYNC: bool = True
 	VIDEO_SYNC: bool = True
 	FPS_TARGET: int = 59.7275
