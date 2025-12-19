@@ -1,0 +1,16 @@
+__pycache__
+
+*.zip
+*.exe
+
+# gba binary/linker map/sram
+*.elf
+*.map
+*.gba
+*.sav
+
+# mgba build files
+res/mgba/*
+
+*.log
+dump/
