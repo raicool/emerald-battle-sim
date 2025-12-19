@@ -11,7 +11,7 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
 * [todo list](#todo-list)
 
 ## prerequesites
-- custom branch of pokeemerald-expansion
+- a custom fork of pokeemerald-expansion
     - copy the debug elf file `pokeemerald.elf` and linker map `pokeemerald.map` into the project's res folder
     - i cannot provide prebuilt roms for obvious reasons. build instructions are in the fork readme
 - devkitpro installed (recommended to also have devkitARM's gdb executable in your PATHs located in `(devkitpro dir)/devkitARM/bin/`)
@@ -30,5 +30,6 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
 - saved information about the leaderboard are stored in the `dump/` directory, and a viewable html page of the leaderboard is stored at `website/html/leaderboard.html`
 ### todo list
 - [ ] remove requirement for a custom fork of pokeemerald-expansion 
+- [ ] prevent database from being recalculated every match, takes a lot of time if there are a lot of matches in the battle logs
 
 ![](image-lb.png)
