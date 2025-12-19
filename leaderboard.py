@@ -61,11 +61,14 @@ def __table_data_trainer_name(_trainer: trainer):
 		+"</td>"
 	)
 
-def __table_data_pokemon_boxsprite(mon_data: str) -> str:
-	_pkmn: trainermon = utils.json2obj(mon_data)
-	_mon_name: str = strings.pokemon[_pkmn.species].lower()
+def __table_data_pokemon_boxsprite(party: list[str]) -> str:
+	value: str = str()
+	for mon_data in party:
+		_pkmn: trainermon = utils.json2obj(mon_data)
+		_mon_name: str = strings.pokemon[_pkmn.species].lower()
 
-	return f"<td class=image><img class=p src=\"{BOX_SPRITE_URL}{"shiny/" if _pkmn.shiny else "regular/"}{_mon_name}.png\"></td>"
+		value += f"<td class=image><img class=p src=\"{BOX_SPRITE_URL}{"shiny/" if _pkmn.shiny else "regular/"}{_mon_name}.png\"></td>"
+	return value
 
 def __table_body_trainerdata(_database: trainer_database) -> str:
 	value: str = str()
@@ -77,24 +80,19 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 			wl_ratio = round(wl_ratio, 3)
 		else:
 			wl_ratio: float = 0
-			
+		
 		value += str(
 			"<tr class=header>"
 				+"<td>"
 					+f"<p id=\"output{idx}\"></p>"
-					+f"<script type=\"text/javascript\" src=\"timestamp.js\" idx={idx} last_match={_trainer.get("last_match", 0)}></script>"
-				+"</td>" # Time since last played
+					+f"<script type=\"text/javascript\" src=\"timestamp.js\" idx={idx} last_match={_trainer.get("last_match", 0)}></script>" # Time since last played
+				+"</td>" 
 				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
 				+f"<td><img src=\"sprites/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
 				+__table_data_trainer_name(_trainer) # Name
 				+f"<td>{0}</td>" # League
 				+f"<td><code>{_trainer["id"]}</code></td>" # UUID
-				+__table_data_pokemon_boxsprite(_trainer["party"][0])
-				+__table_data_pokemon_boxsprite(_trainer["party"][1])
-				+__table_data_pokemon_boxsprite(_trainer["party"][2])
-				+__table_data_pokemon_boxsprite(_trainer["party"][3])
-				+__table_data_pokemon_boxsprite(_trainer["party"][4])
-				+__table_data_pokemon_boxsprite(_trainer["party"][5])
+				+__table_data_pokemon_boxsprite(_trainer["party"]) # Party
 				+f"<td>{int(_trainer["elo"])}</td>" # Points
 				+f"<td>{int(_trainer["wins"])}</td>" # Wins
 				+f"<td>{int(_trainer["losses"])}</td>" # Losses
