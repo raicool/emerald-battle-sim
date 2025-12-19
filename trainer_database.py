@@ -3,9 +3,11 @@ from datetime import datetime
 import json
 import os
 import random
+import uuid
 from elo import calc_game_results
 import elo
 import log
+from poke_data import get_trainer_pic_id
 from pokemon import construct_trainer_json, trainer, trainermon
 import utils
 
@@ -92,6 +94,7 @@ class trainer_database:
 			player["wins"] = 0
 			player["losses"] = 0
 			player["elo"] = 1000
+			player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
 
 		elos: dict[int, float] = {}
 		while split := battle_log.readline().rsplit():

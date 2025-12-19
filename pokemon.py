@@ -11,7 +11,7 @@ import requests
 
 import log
 import names
-from poke_data import __BattleEnvironments, __BattleTransitions, __TrainerClasses, __ai_flag, __ev_order, __BattleBGMs
+from poke_data import __BattleEnvironments, __BattleTransitions, __TrainerClasses, __ai_flag, __ev_order, __BattleBGMs, get_trainer_pic_id
 import strings
 from utils import to_charmap_index
 
@@ -281,14 +281,14 @@ def main():
 		gender: int = random.randint(0, 1)
 		test_trainer: trainer = trainer()
 
+		test_trainer.id = uuid.uuid4()
 		test_trainer.party_size = 6
 		test_trainer.trainer_class = random.randint(0, __TrainerClasses.TRAINER_CLASS_COUNT - 1)
-		test_trainer.trainer_pic = test_trainer.trainer_class + 3
+		test_trainer.trainer_pic = get_trainer_pic_id(test_trainer.trainer_class, test_trainer.gender, test_trainer.id)
 		test_trainer.battle_environment = random.randint(0, __BattleEnvironments.BATTLE_ENVIRONMENT_RAYQUAZA - 1)
 		test_trainer.battle_transition = random.randint(0, __BattleTransitions.B_TRANSITION_COUNT - 1)
 		test_trainer.battle_music = random.choice(list(__BattleBGMs.keys()))
 		test_trainer.gender = random.randint(0, 1)
-		test_trainer.id = uuid.uuid4()
 		test_trainer.aiflags = DEFAULT_TRAINER_AI_FLAGS
 
 		if (gender == 0):
