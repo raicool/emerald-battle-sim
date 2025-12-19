@@ -1,6 +1,5 @@
 from asyncio import sleep
 from datetime import datetime
-import threading
 from time import time
 import os
 import random

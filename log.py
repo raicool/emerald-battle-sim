@@ -1,6 +1,6 @@
 from enum import IntEnum
 from inspect import getframeinfo, stack
-from colorama import Fore, Back, Style, init
+from colorama import Fore, Back, init
 from typing import IO
 from datetime import datetime
 
