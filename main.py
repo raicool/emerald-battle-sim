@@ -95,8 +95,6 @@ def main():
 		leaderboard.update_html(_trainerdb)
 		log.log_level = log.level.TRACE
 
-		if (battle_count >= 10):
-			return
 		battle_count += 1
 
 		# basic matchmaking
