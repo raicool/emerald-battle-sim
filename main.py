@@ -22,8 +22,9 @@ from trainer_database import trainer_database
 MGBA_PATH: str = "res/mgba/mgba.exe"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
-GAME_FASTFORWARD: bool = True
 FRAME_SIZE: int = 4
+
+GAME_FASTFORWARD: bool = True
 
 if (GAME_FASTFORWARD):
 	# fast settings
@@ -63,10 +64,13 @@ def call_mgba() -> subprocess.Popen:
 
 _trainerdb: trainer_database = trainer_database()
 
-def write_battle_log(winner: trainer, loser: trainer):
+def write_battle_log(winner: trainer, loser: trainer, previous_elo: tuple[float, float]):
+	winner_delta: float = previous_elo[0] - winner.elo
+	loser_delta: float = previous_elo[1] - loser.elo
 	f = open("dump/battle_log.txt", "a", encoding="utf-16")
 	battle_time = datetime.now().timestamp()
-	f.write(f"{winner.id}\t{loser.id}\t{battle_time}\n")
+	
+	f.write(f"{winner.id}\t{loser.id}\t{battle_time}\t{winner_delta}\t{loser_delta}\n")
 	f.close()
 
 def log_trainer_introduction(left: trainer, right: trainer):
@@ -153,9 +157,6 @@ def main():
 
 # __attribute__((section(".sbss"))) u8 gBattleOutcome
 			"watch gBattleOutcome if gBattleOutcome > 0\n"
-			"commands\n"
-			"set $outcome = gBattleOutcome\n"
-			"end\n"
 
 			"c", 
 			timeout = 0.5
@@ -164,7 +165,7 @@ def main():
 		while (in_battle):
 			# veery hacky way of figuring out the battle winner
 			# i hate using gdb
-			response: list[dict] = gdb.write_command(debugger, "p/x $outcome", 5)
+			response: list[dict] = gdb.write_command(debugger, "p/x gBattleOutcome", 5)
 
 			if game_proc.poll() is not None:
 				# assume game_process is terminated willingly
@@ -205,9 +206,10 @@ def main():
 
 def end_battle(winner: trainer, loser: trainer):
 	global _trainerdb
+	prev_elo: tuple[float, float] = [winner.elo, loser.elo]
 	elo.calc_game_results(winner, loser)
 	_trainerdb.serialize_json()
-	write_battle_log(winner, loser)
+	write_battle_log(winner, loser, prev_elo)
 
 def test():
 	_trainerdb: trainer_database = trainer_database()
