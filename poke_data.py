@@ -566,6 +566,103 @@ class __TrainerClasses(IntEnum):
 	TRAINER_CLASS_RS_PROTAG = 65
 	TRAINER_CLASS_COUNT = 66
 
+# male or androgynous trainer classes
+trainer_class_male: list[int] = [
+	__TrainerClasses.TRAINER_CLASS_PKMN_TRAINER_1,
+	__TrainerClasses.TRAINER_CLASS_HIKER,
+	__TrainerClasses.TRAINER_CLASS_TEAM_AQUA,
+	__TrainerClasses.TRAINER_CLASS_PKMN_BREEDER,
+	__TrainerClasses.TRAINER_CLASS_COOLTRAINER,
+	__TrainerClasses.TRAINER_CLASS_BIRD_KEEPER,
+	__TrainerClasses.TRAINER_CLASS_COLLECTOR,
+	__TrainerClasses.TRAINER_CLASS_SWIMMER_M,
+	__TrainerClasses.TRAINER_CLASS_TEAM_MAGMA,
+	__TrainerClasses.TRAINER_CLASS_EXPERT,
+	__TrainerClasses.TRAINER_CLASS_AQUA_ADMIN,
+	__TrainerClasses.TRAINER_CLASS_BLACK_BELT,
+	__TrainerClasses.TRAINER_CLASS_AQUA_LEADER,
+	__TrainerClasses.TRAINER_CLASS_HEX_MANIAC,
+	__TrainerClasses.TRAINER_CLASS_RUIN_MANIAC,
+	__TrainerClasses.TRAINER_CLASS_INTERVIEWER,
+	__TrainerClasses.TRAINER_CLASS_TUBER_M,
+	__TrainerClasses.TRAINER_CLASS_RICH_BOY,
+	__TrainerClasses.TRAINER_CLASS_POKEMANIAC,
+	__TrainerClasses.TRAINER_CLASS_GUITARIST,
+	__TrainerClasses.TRAINER_CLASS_KINDLER,
+	__TrainerClasses.TRAINER_CLASS_CAMPER,
+	__TrainerClasses.TRAINER_CLASS_BUG_MANIAC,
+	__TrainerClasses.TRAINER_CLASS_PSYCHIC,
+	__TrainerClasses.TRAINER_CLASS_GENTLEMAN,
+	__TrainerClasses.TRAINER_CLASS_ELITE_FOUR,
+	__TrainerClasses.TRAINER_CLASS_LEADER,
+	__TrainerClasses.TRAINER_CLASS_SCHOOL_KID,
+	__TrainerClasses.TRAINER_CLASS_WINSTRATE,
+	__TrainerClasses.TRAINER_CLASS_POKEFAN,
+	__TrainerClasses.TRAINER_CLASS_CHAMPION,
+	__TrainerClasses.TRAINER_CLASS_FISHERMAN,
+	__TrainerClasses.TRAINER_CLASS_TRIATHLETE,
+	__TrainerClasses.TRAINER_CLASS_DRAGON_TAMER,
+	__TrainerClasses.TRAINER_CLASS_NINJA_BOY,
+	__TrainerClasses.TRAINER_CLASS_SAILOR,
+	__TrainerClasses.TRAINER_CLASS_COOLTRAINER_2,
+	__TrainerClasses.TRAINER_CLASS_MAGMA_ADMIN,
+	__TrainerClasses.TRAINER_CLASS_RIVAL,
+	__TrainerClasses.TRAINER_CLASS_BUG_CATCHER,
+	__TrainerClasses.TRAINER_CLASS_PKMN_RANGER,
+	__TrainerClasses.TRAINER_CLASS_MAGMA_LEADER,
+#	__TrainerClasses.TRAINER_CLASS_YOUNG_COUPLE,
+#	__TrainerClasses.TRAINER_CLASS_OLD_COUPLE,
+#	__TrainerClasses.TRAINER_CLASS_SIS_AND_BRO,
+	__TrainerClasses.TRAINER_CLASS_DOME_ACE,
+	__TrainerClasses.TRAINER_CLASS_PALACE_MAVEN,
+	__TrainerClasses.TRAINER_CLASS_FACTORY_HEAD,
+	__TrainerClasses.TRAINER_CLASS_PYRAMID_KING,
+	__TrainerClasses.TRAINER_CLASS_RS_PROTAG,
+]
+
+# female or androgynous trainer classes
+trainer_class_female: list[int] = [
+	__TrainerClasses.TRAINER_CLASS_PKMN_TRAINER_2,
+	__TrainerClasses.TRAINER_CLASS_TEAM_AQUA,
+	__TrainerClasses.TRAINER_CLASS_PKMN_BREEDER,
+	__TrainerClasses.TRAINER_CLASS_COOLTRAINER,
+	__TrainerClasses.TRAINER_CLASS_TEAM_MAGMA,
+	__TrainerClasses.TRAINER_CLASS_EXPERT,
+	__TrainerClasses.TRAINER_CLASS_AQUA_ADMIN,
+	__TrainerClasses.TRAINER_CLASS_HEX_MANIAC,
+	__TrainerClasses.TRAINER_CLASS_AROMA_LADY,
+#	__TrainerClasses.TRAINER_CLASS_INTERVIEWER,
+	__TrainerClasses.TRAINER_CLASS_TUBER_F,
+	__TrainerClasses.TRAINER_CLASS_LADY,
+	__TrainerClasses.TRAINER_CLASS_BEAUTY,
+	__TrainerClasses.TRAINER_CLASS_PICNICKER,
+	__TrainerClasses.TRAINER_CLASS_PSYCHIC,
+	__TrainerClasses.TRAINER_CLASS_ELITE_FOUR,
+	__TrainerClasses.TRAINER_CLASS_LEADER,
+	__TrainerClasses.TRAINER_CLASS_SCHOOL_KID,
+#	__TrainerClasses.TRAINER_CLASS_SR_AND_JR,
+	__TrainerClasses.TRAINER_CLASS_WINSTRATE,
+	__TrainerClasses.TRAINER_CLASS_POKEFAN,
+	__TrainerClasses.TRAINER_CLASS_TRIATHLETE,
+	__TrainerClasses.TRAINER_CLASS_BATTLE_GIRL,
+	__TrainerClasses.TRAINER_CLASS_PARASOL_LADY,
+	__TrainerClasses.TRAINER_CLASS_SWIMMER_F,
+#	__TrainerClasses.TRAINER_CLASS_TWINS,
+	__TrainerClasses.TRAINER_CLASS_COOLTRAINER_2,
+	__TrainerClasses.TRAINER_CLASS_MAGMA_ADMIN,
+	__TrainerClasses.TRAINER_CLASS_RIVAL,
+	__TrainerClasses.TRAINER_CLASS_PKMN_RANGER,
+	__TrainerClasses.TRAINER_CLASS_LASS,
+#	__TrainerClasses.TRAINER_CLASS_YOUNG_COUPLE,
+#	__TrainerClasses.TRAINER_CLASS_OLD_COUPLE,
+#	__TrainerClasses.TRAINER_CLASS_SIS_AND_BRO,
+	__TrainerClasses.TRAINER_CLASS_SALON_MAIDEN,
+	__TrainerClasses.TRAINER_CLASS_ARENA_TYCOON,
+	__TrainerClasses.TRAINER_CLASS_PIKE_QUEEN,
+	__TrainerClasses.TRAINER_CLASS_RS_PROTAG,
+	__TrainerClasses.TRAINER_CLASS_COUNT
+]
+
 class __ev_order(IntEnum):
 	EV_HP = 0
 	EV_ATK = 1
@@ -622,7 +719,16 @@ class __ai_flag(IntEnum):
 	AI_FLAG_SAFARI       = (1 << 62)
 	AI_FLAG_FIRST_BATTLE = (1 << 63)
 
+def get_rand_trainer_class(gender: int, uuid: uuid.uuid4 = 0) -> int:
+	# male classes
+	if (gender == 0):
+		return trainer_class_male[(int(uuid) + 0x7fa6) % len(trainer_class_male)]
+	else:
+		return trainer_class_female[(int(uuid) + 0x7fa6) % len(trainer_class_female)]
+
 def get_trainer_pic_id(trainer_class: __TrainerClasses, gender: int, uuid: uuid.uuid4 = 0) -> int:
+	"""returns a random trainer pic id based on the trainer gender, and uuid for randomness"""
+	random.seed = int(uuid) + 0x7fa6
 	match (trainer_class):
 		case __TrainerClasses.TRAINER_CLASS_HIKER: return 0
 		case __TrainerClasses.TRAINER_CLASS_TEAM_AQUA: 
@@ -632,9 +738,9 @@ def get_trainer_pic_id(trainer_class: __TrainerClasses, gender: int, uuid: uuid.
 				return 6
 		case __TrainerClasses.TRAINER_CLASS_PKMN_BREEDER: 
 			if (gender == 0):
-				return 2
-			else:
 				return 32
+			else:
+				return 2
 		case __TrainerClasses.TRAINER_CLASS_COOLTRAINER:
 			if (gender == 0):
 				return 3
@@ -690,7 +796,7 @@ def get_trainer_pic_id(trainer_class: __TrainerClasses, gender: int, uuid: uuid.
 			if (gender == 0):
 				return random.choice([41, 42, 44, 47])
 			else:
-				return random.choice([40, 43, 45, 46])
+				return random.choice([40, 43, 45]) # excludes tate and liza
 		case __TrainerClasses.TRAINER_CLASS_SCHOOL_KID:
 			if (gender == 0):
 				return 48
@@ -702,11 +808,16 @@ def get_trainer_pic_id(trainer_class: __TrainerClasses, gender: int, uuid: uuid.
 				return 51
 			else:
 				return 52
+		case __TrainerClasses.TRAINER_CLASS_WINSTRATE: 
+			if (gender == 0):
+				return 53
+			else:
+				return random.choice([52, 77, 24])
 		case __TrainerClasses.TRAINER_CLASS_YOUNGSTER: return 53
 		case __TrainerClasses.TRAINER_CLASS_CHAMPION:
 			return 54 if (int(uuid) % 2 == 0) else 81
 		case __TrainerClasses.TRAINER_CLASS_FISHERMAN: return 55
-		case __TrainerClasses.TRAINER_CLASS_TRIATHLETE: return 56 + (2 * random.randint(0, 2)) + gender
+		case __TrainerClasses.TRAINER_CLASS_TRIATHLETE: return 56 + (2 * int(uuid) % 3) + gender
 		case __TrainerClasses.TRAINER_CLASS_DRAGON_TAMER: return 62
 		case __TrainerClasses.TRAINER_CLASS_NINJA_BOY: return 63
 		case __TrainerClasses.TRAINER_CLASS_BATTLE_GIRL: return 64
@@ -715,7 +826,11 @@ def get_trainer_pic_id(trainer_class: __TrainerClasses, gender: int, uuid: uuid.
 		case __TrainerClasses.TRAINER_CLASS_TWINS: return 67
 		case __TrainerClasses.TRAINER_CLASS_SAILOR: return 68
 		case __TrainerClasses.TRAINER_CLASS_MAGMA_ADMIN: return 69
-		case __TrainerClasses.TRAINER_CLASS_RIVAL: return random.choice([70, 71, 72])
+		case __TrainerClasses.TRAINER_CLASS_RIVAL: 
+			if (gender == 0):
+				return 70 + int(uuid) % 2
+			else:
+				return 72
 		case __TrainerClasses.TRAINER_CLASS_BUG_CATCHER: return 73
 		case __TrainerClasses.TRAINER_CLASS_PKMN_RANGER: return 74 + gender
 		case __TrainerClasses.TRAINER_CLASS_MAGMA_LEADER: return 76

@@ -287,6 +287,7 @@ def main():
 		test_trainer.id = uuid.uuid4()
 		test_trainer.party_size = 6
 		test_trainer.trainer_class = random.randint(0, __TrainerClasses.TRAINER_CLASS_COUNT - 1)
+		test_trainer.gender = random.randint(0, 1)
 		test_trainer.trainer_pic = get_trainer_pic_id(test_trainer.trainer_class, test_trainer.gender, test_trainer.id)
 		test_trainer.battle_environment = random.randint(0, __BattleEnvironments.BATTLE_ENVIRONMENT_RAYQUAZA - 1)
 		test_trainer.battle_transition = random.randint(0, __BattleTransitions.B_TRANSITION_COUNT - 1)
