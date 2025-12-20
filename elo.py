@@ -34,6 +34,14 @@ leagues: dict[float, str] = {
 	1500: "beast"
 }
 
+def __set_elo(_trainer: trainer, delta: float):
+	_trainer.elo += delta
+	for elo_min, league in leagues.items():
+		if (_trainer.elo >= elo_min):
+			_trainer.league = league
+	_trainer.battles += 1
+
+
 def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> tuple[trainer, trainer]:
 	if (recalc == False):
 		elo_dict: dict = utils.load_json(ELO_FILE)
@@ -56,18 +64,10 @@ def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> 
 		#log.debug("pillow")
 		loser_loss *= 0.5
 	
-	winner.elo += winner_gain
-	for elo_min, league in leagues.items():
-		if (winner.elo >= elo_min):
-			winner.league = league
-	winner.battles += 1
+	__set_elo(winner, winner_gain)
 	winner.wins += 1
-		
-	loser.elo += loser_loss
-	for elo_min, league in leagues.items():
-		if (loser.elo >= elo_min):
-			loser.league = league
-	loser.battles += 1
+
+	__set_elo(loser, loser_loss)
 	loser.losses += 1
 
 	if (recalc == False):
