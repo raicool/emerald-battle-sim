@@ -59,7 +59,7 @@ class trainer:
 	battles: int = 0
 	wins: int = 0
 	losses: int = 0
-	elo: int = 1000
+	elo: float = 1000
 	league: str = ""
 	rank: int = 0
 	# unix timestamp
@@ -133,29 +133,32 @@ def gdb_partydata(side: int, data: trainer) -> str:
 	trainer_side_variable: str = "gTrainerLeft" if (side == 0) else "gTrainerRight"
 	ret: str = str()
 	
+	party = data.party
+	random.shuffle(party)
+
 	for i in range(data.party_size):
 		poke_ptr: str = f"{trainer_side_variable}->party[{i}]"
 
 		# set the ev array
-		ret += __poke_ev_data(trainer_side_variable, i, data.party[i].evs)
+		ret += __poke_ev_data(trainer_side_variable, i, party[i].evs)
 
 		move_idx: int = 0
-		for move in data.party[i].moves:
+		for move in party[i].moves:
 			if move_idx > 3:
 				break
 			ret += str(f"set {poke_ptr}.moves[{move_idx}] = {move}\n")
 			move_idx += 1
 		
 		ret += str(
-				f"set {poke_ptr}.heldItem = {data.party[i].item + 2}\n"
-				f"set {poke_ptr}.ability = {data.party[i].ability}\n"
-				f"set {poke_ptr}.species = {data.party[i].species}\n"
-				f"set {poke_ptr}.lvl = {data.party[i].level}\n"
-				f"set {poke_ptr}.ball = {data.party[i].ball}\n"
-				f"set {poke_ptr}.friendship = {data.party[i].friendship}\n"
-				f"set {poke_ptr}.nature = {data.party[i].nature}\n"
-				f"set {poke_ptr}.gender = {data.party[i].gender}\n"
-				f"set {poke_ptr}.isShiny = {1 if data.party[i].shiny else 0}\n"
+				f"set {poke_ptr}.heldItem = {party[i].item + 2}\n"
+				f"set {poke_ptr}.ability = {party[i].ability}\n"
+				f"set {poke_ptr}.species = {party[i].species}\n"
+				f"set {poke_ptr}.lvl = {party[i].level}\n"
+				f"set {poke_ptr}.ball = {party[i].ball}\n"
+				f"set {poke_ptr}.friendship = {party[i].friendship}\n"
+				f"set {poke_ptr}.nature = {party[i].nature}\n"
+				f"set {poke_ptr}.gender = {party[i].gender}\n"
+				f"set {poke_ptr}.isShiny = {1 if party[i].shiny else 0}\n"
 			)
 	return ret
 
