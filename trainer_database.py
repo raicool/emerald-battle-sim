@@ -4,10 +4,12 @@ import json
 import os
 import random
 import shutil
+import uuid
 from elo import calc_game_results
 import elo
 import log
-from poke_data import get_trainer_pic_id
+import names
+from poke_data import get_rand_trainer_class, get_trainer_pic_id
 from pokemon import construct_trainer_json, trainer
 import utils
 
@@ -92,11 +94,16 @@ class trainer_database:
 		elo_json.close()
 
 		for player in self.db.values():
+#			if (player["name"] in names.male):
+#				player["gender"] = 0
+#			else:
+#				player["gender"] = 1
 			player["battles"] = 0
 			player["wins"] = 0
 			player["losses"] = 0
 			player["elo"] = 1000
-			#player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
+#			player["trainer_class"] = get_rand_trainer_class(player["gender"], uuid.UUID(player["id"]))
+#			player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
 
 		elos: dict[int, float] = {}
 		while split := battle_log.readline().rsplit():
