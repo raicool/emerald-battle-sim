@@ -20,6 +20,7 @@ HTML_HEADER = f"""\
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="{"github-markdown-light.css" if THEME == __site_theme.LIGHT else "github-markdown.css"}">
 		<link rel="stylesheet" href="pokesprite-docs.css">
+        <script type="module" src="utility.js"></script>
 		<style>
 			.markdown-body {{
 				box-sizing: border-box;
@@ -82,22 +83,20 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 			wl_ratio: float = 0
 		
 		value += str(
-			"<tr class=header>"
-				+"<td>"
-					+f"<p id=\"output{idx}\"></p>"
-					+f"<script type=\"text/javascript\" src=\"timestamp.js\" idx={idx} last_match={_trainer.get("last_match", 0)}></script>" # Time since last played
+			f"<tr id=\"pidx{idx}\" class=header>"
+				+"<td style=\"width: 20%\">"
 				+"</td>" 
 				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
 				+f"<td><img src=\"sprites/mugshot/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
 				+__table_data_trainer_name(_trainer) # Name
 				+f"<td class=image><img class=p src=\"{LEAGUE_SPRITE_URL}{_trainer["league"]}.png\"></td>" # League
-				+f"<td><code>{_trainer["id"]}</code></td>" # UUID
+				+f"<td><code>{_trainer.get("id", "-")}</code></td>" # UUID
 				+__table_data_pokemon_boxsprite(_trainer["party"]) # Party
-				+f"<td>{int(_trainer["elo"])}</td>" # Points
-				+f"<td>{int(_trainer["wins"])}</td>" # Wins
-				+f"<td>{int(_trainer["losses"])}</td>" # Losses
+				+f"<td>{int(_trainer.get("elo", -1))}</td>" # Points
+				+f"<td>{_trainer.get("wins", "-")}</td>" # Wins
+				+f"<td>{_trainer.get("losses", "-")}</td>" # Losses
 				+f"<td>{wl_ratio}%</td>" # Win %
-				+f"<td>{int(_trainer["battles"])}</td>" # Battles
+				+f"<td>{_trainer.get("battles", "-")}</td>" # Battles
 			+"</tr>"
 		)
 		idx += 1
@@ -108,7 +107,7 @@ def update_html(_database: trainer_database):
 
 	html += str(
 		"<div>"
-			+"<table class=\"pokesprite\">"
+			+"<table class=\"pokesprite\" id=\"leaderboard\" style=\"table-layout: fixed;\">"
 				+"<caption>"
 					+"<header>"
     					+"Emerald Battle Simulator Leaderboard"
@@ -140,7 +139,7 @@ def update_html(_database: trainer_database):
 					+__table_body_trainerdata(_database)
 				+"</tbody>"
 			+"</table>"
-			+"<script type=\"text/javascript\" src=\"sortable-table.js\"></script>"
+			+"<script type=\"module\" src=\"leaderboard.js\"></script>"
 		+"</div>"
 	)
 
