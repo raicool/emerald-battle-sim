@@ -50,7 +50,6 @@ class trainer_database:
 		_temp.trainer_pic = entry.get("trainer_pic", 0)
 		_temp.party = entry.get("party", [])
 		_temp.party_size = min(6, len(_temp.party))
-
 		return _temp
 
 	def __trainer_set_from_struct_obj(self, idx: int, entry: trainer):
@@ -77,17 +76,24 @@ class trainer_database:
 			if self.db[i]["id"] == uuid:
 				return i
 		return -1
-			
+	
+	def rank_trainers(self, elo_file):
+		elo_file.seek(0)
+		elos: dict[int, float] = json.load(elo_file)
+		sorted_elos = sorted(elos.items(), key=lambda kv: kv[1], reverse = True)
+		rank: int = 1
+		for id, elo in sorted_elos:
+			index = self.find_trainer_index(id)
+			self.db[index]["rank"] = rank
+			rank += 1
 	
 	def recalculate(self, log_path: str):
 		if (os.path.isfile(log_path) == False):
 			log.critical("attempted to recalculate db elo with invalid battle log file!\n\t^~~ file does not exist")
 			return
 		battle_log = open(log_path, "r+", encoding = "utf-16")
-		elo_json = open(elo.ELO_FILE, "w")
-		json.dump(dict({"last_update": datetime.now().timestamp()}), elo_json)
-		elo_json.close()
-
+		elo_json = open(elo.ELO_FILE, "r+", encoding = "utf-8")
+		
 		for player in self.db.values():
 #			if (player["name"] in names.male):
 #				player["gender"] = 0
@@ -126,22 +132,21 @@ class trainer_database:
 			self.db[winner]["league"] = new_elos[0].league
 			self.db[winner]["battles"] = new_elos[0].battles
 			self.db[winner]["wins"] = new_elos[0].wins
-			elos[winner] = new_elos[0].elo
+			elos[new_elos[0].id] = new_elos[0].elo
 
 			self.db[loser]["last_match"] = timestamp
 			self.db[loser]["elo"] = new_elos[1].elo
 			self.db[loser]["league"] = new_elos[1].league
 			self.db[loser]["battles"] = new_elos[1].battles
 			self.db[loser]["losses"] = new_elos[1].losses
-			elos[loser] = new_elos[1].elo
+			elos[new_elos[1].id] = new_elos[1].elo
 
 			#log.debug(f"winner: {winner_uuid}\nloser: {loser_uuid}")
 		
 		# scuffed method of calculating player rank
-		sorted_elos = sorted(elos.items(), key=lambda kv: kv[1], reverse = True)
-		rank: int = 1
-		for id in sorted_elos:
-			self.db[id[0]]["rank"] = rank
-			rank += 1
 		
+		json.dump(elos, elo_json)
+		self.rank_trainers(elo_json)
+		elo_json.close()
+
 		self.serialize_json()

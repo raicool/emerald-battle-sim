@@ -44,7 +44,7 @@ def __set_elo(_trainer: trainer, delta: float):
 
 def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> tuple[trainer, trainer]:
 	if (recalc == False):
-		elo_dict: dict = utils.load_json(ELO_FILE)
+		elo_dict: dict = utils.load_json(ELO_FILE, "r+")
 
 	# calculate the chances of either player winning
 	winner_chance: float = 1 / (1 + math.pow(10, (loser.elo - winner.elo) / 400))
@@ -76,7 +76,6 @@ def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> 
 		loser.last_match = match_timestamp
 		elo_dict[str(winner.id)] = winner.elo
 		elo_dict[str(loser.id)] = loser.elo
-		elo_dict["last_update"] = match_timestamp
 
 		file = open(ELO_FILE, "w")
 		json.dump(elo_dict, file)

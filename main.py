@@ -201,6 +201,8 @@ def main():
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_DRAW:
 						pass
 				
+				trainer_left.rank = _trainerdb.trainer_from_uuid(trainer_left.id).rank
+				trainer_right.rank = _trainerdb.trainer_from_uuid(trainer_right.id).rank
 				battle.finalize(trainer_left, trainer_right, result)
 
 				in_battle = False
@@ -215,6 +217,7 @@ def end_battle(winner: trainer, loser: trainer):
 	elo.calc_game_results(winner, loser)
 	_trainerdb.update_trainer(winner.id, winner)
 	_trainerdb.update_trainer(loser.id, loser)
+	_trainerdb.rank_trainers(open("dump/elo.json", "r+", encoding = "utf-8"))
 	_trainerdb.serialize_json()
 	write_battle_log(winner, loser, prev_elo)
 
