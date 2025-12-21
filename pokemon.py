@@ -47,10 +47,21 @@ class trainermon:
 	shiny: bool = True
 
 	def json_serialize(self):
-		return json.dumps(
-			self,
-			default=lambda o: o.__dict__
-			)
+		return dict({
+			"nickname": self.nickname,
+			"evs": self.evs,
+			"iv": self.iv,
+			"moves": self.moves,
+			"species": self.species,
+			"item": self.item,
+			"ability": self.ability,
+			"level": self.level,
+			"ball": self.ball,
+			"friendship": self.friendship,
+			"nature": self.nature,
+			"gender": self.gender,
+			"shiny": self.shiny
+		})
 
 @dataclass
 class trainer:
@@ -140,25 +151,25 @@ def gdb_partydata(side: int, data: trainer) -> str:
 		poke_ptr: str = f"{trainer_side_variable}->party[{i}]"
 
 		# set the ev array
-		ret += __poke_ev_data(trainer_side_variable, i, party[i].evs)
+		ret += __poke_ev_data(trainer_side_variable, i, party[i]["evs"])
 
 		move_idx: int = 0
-		for move in party[i].moves:
+		for move in party[i]["moves"]:
 			if move_idx > 3:
 				break
 			ret += str(f"set {poke_ptr}.moves[{move_idx}] = {move}\n")
 			move_idx += 1
 		
 		ret += str(
-				f"set {poke_ptr}.heldItem = {party[i].item + 2}\n"
-				f"set {poke_ptr}.ability = {party[i].ability}\n"
-				f"set {poke_ptr}.species = {party[i].species}\n"
-				f"set {poke_ptr}.lvl = {party[i].level}\n"
-				f"set {poke_ptr}.ball = {party[i].ball}\n"
-				f"set {poke_ptr}.friendship = {party[i].friendship}\n"
-				f"set {poke_ptr}.nature = {party[i].nature}\n"
-				f"set {poke_ptr}.gender = {party[i].gender}\n"
-				f"set {poke_ptr}.isShiny = {1 if party[i].shiny else 0}\n"
+				f"set {poke_ptr}.heldItem = {party[i]["item"] + 2}\n"
+				f"set {poke_ptr}.ability = {party[i]["ability"]}\n"
+				f"set {poke_ptr}.species = {party[i]["species"]}\n"
+				f"set {poke_ptr}.lvl = {party[i]["level"]}\n"
+				f"set {poke_ptr}.ball = {party[i]["ball"]}\n"
+				f"set {poke_ptr}.friendship = {party[i]["friendship"]}\n"
+				f"set {poke_ptr}.nature = {party[i]["nature"]}\n"
+				f"set {poke_ptr}.gender = {party[i]["gender"]}\n"
+				f"set {poke_ptr}.isShiny = {1 if party[i]["shiny"] else 0}\n"
 			)
 	return ret
 
@@ -170,9 +181,14 @@ def __decide(set: dict, attribute: str, default: str = "") -> Any:
 		set[attribute] = default
 	return set[attribute]
 
-def generate_pkmn(pkmn_database: dict) -> trainermon:
-	which_pkmn: tuple = random.choice(list(pkmn_database.items()))
-	pokemon_name: str = which_pkmn[0]
+def generate_pkmn(pkmn_database: dict, pokemon_id: int = -1) -> trainermon:
+	if (pokemon_id == -1):
+		which_pkmn: tuple = random.choice(list(pkmn_database.items()))
+		pokemon_name: str = which_pkmn[0]
+	else:
+		pokemon_name: str = strings.pokemon[pokemon_id]
+		data = pkmn_database[pokemon_name]
+		which_pkmn: tuple = tuple[str, dict]([pokemon_name, data])
 
 	if ("Deoxys" in pokemon_name):
 		pokemon_name = "Deoxys-Normal"
@@ -244,6 +260,7 @@ def construct_trainer_json(_trainer: trainer):
 	_json["wins"] = _trainer.wins
 	_json["losses"] = _trainer.losses
 	_json["elo"] = _trainer.elo
+	_json["league"] = _trainer.league
 	_json["last_match"] = _trainer.last_match
 	_json["trainer_class"] = _trainer.trainer_class
 	_json["battle_environment"] = _trainer.battle_environment
@@ -252,10 +269,7 @@ def construct_trainer_json(_trainer: trainer):
 	_json["gender"] = _trainer.gender
 	_json["aiflags"] = _trainer.aiflags
 	_json["trainer_pic"] = _trainer.trainer_pic
-	pkmn_list_json: list[str] = []
-	for pkmn in _trainer.party:
-		pkmn_list_json.append(str(pkmn.json_serialize()))
-	_json["party"] = pkmn_list_json
+	_json["party"] = _trainer.party
 	return _json
 
 def backup():
@@ -302,7 +316,7 @@ def main():
 
 		for i in range(6):
 			new_pkmn = generate_pkmn(json_response)
-			test_trainer.party.append(new_pkmn)
+			test_trainer.party.append(new_pkmn.json_serialize())
 		
 		trainers[_] = construct_trainer_json(test_trainer)
 		trainers_txt.write("{}\t{}\t{}\n".format(
@@ -312,12 +326,12 @@ def main():
 		))
 		trainer_mons_txt.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(
 			trainers[_]["id"],
-			test_trainer.party[0].species,
-			test_trainer.party[1].species,
-			test_trainer.party[2].species,
-			test_trainer.party[3].species,
-			test_trainer.party[4].species,
-			test_trainer.party[5].species,
+			test_trainer.party[0]["species"],
+			test_trainer.party[1]["species"],
+			test_trainer.party[2]["species"],
+			test_trainer.party[3]["species"],
+			test_trainer.party[4]["species"],
+			test_trainer.party[5]["species"],
 		))
 
 	json.dump(trainers, trainers_json)

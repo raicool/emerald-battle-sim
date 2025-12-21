@@ -1,12 +1,12 @@
 from asyncio import sleep
 from datetime import datetime
-from time import time
 import os
 import random
 import signal
 from colorama import Fore
 from pygdbmi.gdbcontroller import GdbController
 import subprocess
+from battle_summary import summary
 import elo
 import gdb
 import leaderboard
@@ -70,7 +70,7 @@ def write_battle_log(winner: trainer, loser: trainer, previous_elo: tuple[float,
 	f = open("dump/battle_log.txt", "a", encoding="utf-16")
 	battle_time = datetime.now().timestamp()
 	
-	f.write(f"{winner.id}\t{loser.id}\t{battle_time}\t{winner_delta}\t{loser_delta}\n")
+	f.write(f"{winner.id}\t{loser.id}\t{battle_time}\n")
 	f.close()
 
 def log_trainer_introduction(left: trainer, right: trainer):
@@ -89,14 +89,15 @@ def main():
 	global _trainerdb
 	battle_count: int = 0
 	
+	_trainerdb.deserialize_json()
+	_trainerdb.recalculate("dump/battle_log.txt")
+
 	while (1):
 		__gBattleEnvironment: int = 0
 		__gBattleTransition: int = 0
 		__gBattleMusic: int = 0
 		__gRngValue: rng = rng()
 		
-		_trainerdb.deserialize_json()
-		_trainerdb.recalculate("dump/battle_log.txt")
 		leaderboard.update_html(_trainerdb)
 		log.log_level = log.level.TRACE
 
@@ -105,6 +106,7 @@ def main():
 		# basic matchmaking
 		# finds two trainers inside of the database with similar elo
 		trainer_left, trainer_right = find_match(_trainerdb)
+		battle: summary = summary(trainer_left, trainer_right)
 
 		# set the battle details to right trainer's preferred settings
 		__gBattleEnvironment = trainer_right.battle_environment
@@ -199,6 +201,8 @@ def main():
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_DRAW:
 						pass
 				
+				battle.finalize(trainer_left, trainer_right, result)
+
 				in_battle = False
 				os.kill(game_proc.pid, signal.SIGTERM)
 			else:
@@ -206,16 +210,16 @@ def main():
 
 def end_battle(winner: trainer, loser: trainer):
 	global _trainerdb
+
 	prev_elo: tuple[float, float] = [winner.elo, loser.elo]
 	elo.calc_game_results(winner, loser)
+	_trainerdb.update_trainer(winner.id, winner)
+	_trainerdb.update_trainer(loser.id, loser)
 	_trainerdb.serialize_json()
 	write_battle_log(winner, loser, prev_elo)
 
 def test():
-	_trainerdb: trainer_database = trainer_database()
-	_trainerdb.deserialize_json()
-	
-	_trainer: trainer = _trainerdb.random_trainer()
+	pass
 
 if (__name__ == "__main__"):
 	main()

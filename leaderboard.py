@@ -62,13 +62,12 @@ def __table_data_trainer_name(_trainer: trainer):
 		+"</td>"
 	)
 
-def __table_data_pokemon_boxsprite(party: list[str]) -> str:
+def __table_data_pokemon_boxsprite(party: list[dict]) -> str:
 	value: str = str()
 	for mon_data in party:
-		_pkmn: trainermon = utils.json2obj(mon_data)
-		_mon_name: str = strings.pokemon[_pkmn.species].lower()
+		_mon_name: str = strings.pokemon[mon_data.get("species", 0)].lower()
 
-		value += f"<td class=image><img class=p src=\"{BOX_SPRITE_URL}{"shiny/" if _pkmn.shiny else "regular/"}{_mon_name}.png\"></td>"
+		value += f"<td class=image><img class=p src=\"{BOX_SPRITE_URL}{"shiny/" if mon_data.get("shiny", False) else "regular/"}{_mon_name}.png\"></td>"
 	return value
 
 def __table_body_trainerdata(_database: trainer_database) -> str:
@@ -86,7 +85,7 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 			f"<tr id=\"pidx{idx}\" class=header>"
 				+"<td style=\"width: 20%\">"
 				+"</td>" 
-				+f"<td>{_trainer.get("rank", "-")}</td>" # Rank
+				+f"<td>{_trainer.get("rank", "")}</td>" # Rank
 				+f"<td><img src=\"sprites/mugshot/{_trainer["trainer_pic"]}.png\" class=mugshot></td>" # Class
 				+__table_data_trainer_name(_trainer) # Name
 				+f"<td class=image><img class=p src=\"{LEAGUE_SPRITE_URL}{_trainer["league"]}.png\"></td>" # League

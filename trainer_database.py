@@ -10,7 +10,7 @@ import elo
 import log
 import names
 from poke_data import get_rand_trainer_class, get_trainer_pic_id
-from pokemon import construct_trainer_json, trainer
+from pokemon import construct_trainer_json, trainer, trainermon
 import utils
 
 
@@ -20,7 +20,8 @@ class trainer_database:
 	db: list = field(default_factory=lambda: [])
 
 	def deserialize_json(self):
-		self.db: dict = utils.load_json("dump/trainers.json")
+		trainers_json = open("dump/trainers.json", "r", encoding = "utf-8")
+		self.db: dict = json.load(trainers_json, object_hook = dict[str, trainer])
 		self.trainer_count = len(self.db)
 	
 	def serialize_json(self):
@@ -47,10 +48,8 @@ class trainer_database:
 		_temp.gender = entry.get("gender", 0)
 		_temp.aiflags = entry.get("aiflags", 0)
 		_temp.trainer_pic = entry.get("trainer_pic", 0)
-
-		for pkmn in entry["party"]:
-			_temp.party.append(utils.json2obj(pkmn))
-			_temp.party_size += 1
+		_temp.party = entry.get("party", [])
+		_temp.party_size = min(6, len(_temp.party))
 
 		return _temp
 
@@ -69,12 +68,8 @@ class trainer_database:
 		return None
 	
 	def update_trainer(self, uuid: str, new_data: trainer):
-		idx: int = 0
-		for i in self.db.values():
-			if i["id"] == uuid:
-				self.__trainer_set_from_struct_obj(idx, new_data)
-				break
-			idx += 1
+		idx: int = self.find_trainer_index(uuid)
+		self.__trainer_set_from_struct_obj(idx, new_data)
 	
 	# returns -1 if no trainer with uuid is found
 	def find_trainer_index(self, uuid: str) -> int:
@@ -102,6 +97,7 @@ class trainer_database:
 			player["wins"] = 0
 			player["losses"] = 0
 			player["elo"] = 1000
+
 #			player["trainer_class"] = get_rand_trainer_class(player["gender"], uuid.UUID(player["id"]))
 #			player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
 
