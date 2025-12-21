@@ -15,3 +15,5 @@ res/mgba/*
 
 *.log
 dump/
+*.json
+*.txt
