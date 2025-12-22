@@ -15,7 +15,7 @@ import strings
 from utils import to_charmap_index
 
 # default ai flags for a trainer
-DEFAULT_TRAINER_AI_FLAGS: int = __ai_flag.AI_FLAG_SMART_TRAINER | __ai_flag.AI_FLAG_PREDICTION | __ai_flag.AI_FLAG_KNOW_OPPONENT_PARTY
+DEFAULT_TRAINER_AI_FLAGS: int = __ai_flag.AI_FLAG_SMART_TRAINER | __ai_flag.AI_FLAG_KNOW_OPPONENT_PARTY
 # max char array size for a trainer's name ingame
 TRAINER_NAME_LENGTH: int = 10
 MAX_TRAINER_ITEMS: int = 4
@@ -284,7 +284,7 @@ def backup():
 		os.rename(src_path, dst_path)
 
 def main():
-	log.log_level = log.level.DEBUG
+	log.log_level = log.level.NONE
 	if (os.path.exists("dump") == False):
 		os.mkdir("dump")
 	backup()
@@ -340,7 +340,7 @@ def main():
 	trainers_json.close()
 
 if __name__ == "__main__":
-	main()
+	#main()
 #	_trainerdb: trainer_database = trainer_database()
 #	_trainerdb.deserialize_json()
 #	_trainerdb.recalculate("dump/battle_log.txt")
