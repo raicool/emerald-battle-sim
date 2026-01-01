@@ -94,18 +94,13 @@ class trainer_database:
 		battle_log = open(log_path, "r+", encoding = "utf-16")
 		elo_json = open(elo.ELO_FILE, "r+", encoding = "utf-8")
 		
+
 		for player in self.db.values():
-#			if (player["name"] in names.male):
-#				player["gender"] = 0
-#			else:
-#				player["gender"] = 1
+			# if you would like to set a value for all trainers in your database, this is where you would do it
 			player["battles"] = 0
 			player["wins"] = 0
 			player["losses"] = 0
 			player["elo"] = 1000
-
-#			player["trainer_class"] = get_rand_trainer_class(player["gender"], uuid.UUID(player["id"]))
-#			player["trainer_pic"] = get_trainer_pic_id(player["trainer_class"], player["gender"], uuid.UUID(player["id"]))
 
 		elos: dict[int, float] = {}
 		while split := battle_log.readline().rsplit():
