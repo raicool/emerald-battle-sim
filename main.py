@@ -79,8 +79,8 @@ def write_battle_log(winner: trainer, loser: trainer, previous_elo: tuple[float,
 	f.close()
 
 def log_trainer_introduction(left: trainer, right: trainer):
-	left_card: str = str(f"{left.name} ({int(left.elo)})") 
-	right_card: str = str(f"{right.name} ({int(right.elo)})") 
+	left_card: str = str(f"{left.name} ({int(left.elo)}, Rank {left.rank})") 
+	right_card: str = str(f"{right.name} ({int(right.elo)}, Rank {right.rank})") 
 	log.trace(
 			"\n----------------------------------------------------------------------------"
 		   f"\n{left_card:^36} vs {right_card:^36}"
@@ -96,6 +96,8 @@ def main():
 	
 	_trainerdb.deserialize_json()
 	_trainerdb.recalculate("dump/battle_log.txt")
+	left_wins: int = 0
+	right_wins: int = 0
 
 	while (1):
 		__gBattleEnvironment: int = 0
@@ -112,6 +114,13 @@ def main():
 		# finds two trainers inside of the database with similar elo
 		trainer_left, trainer_right = find_match(_trainerdb)
 		battle: summary = summary(trainer_left, trainer_right)
+
+#		if (left_wins >= 2):
+#			log.trace(f"\n\n{trainer_left.name} has won the set.\n({left_wins}/{right_wins})\n")
+#			return
+#		if (right_wins >= 2):
+#			log.trace(f"\n\n{trainer_right.name} has won the set.\n({right_wins}/{left_wins})\n")
+#			return
 
 		# set the battle details to right trainer's preferred settings
 		__gBattleEnvironment = trainer_right.battle_environment
@@ -139,7 +148,6 @@ def main():
 			f"set gRngValue.ctr = {__gRngValue.ctr}\n"
 
 # set my custom variables
-			"set $outcome = 0\n"
 			f"set gBattleMusic = {__gBattleMusic}\n"
 			f"set gBattleTransition = {__gBattleTransition}\n"
 			f"set gTrainerLeftTrainerBackPicID = {4 if trainer_left.gender == 0 else 5}\n"
@@ -202,9 +210,13 @@ def main():
 
 				match result:
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_LEFT:
+						log.trace(f"\n{trainer_left.name} has won the match!\n")
+						left_wins += 1
 						end_battle(trainer_left, trainer_right)
 						pass
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_RIGHT:
+						log.trace(f"\n{trainer_right.name} has won the match!\n")
+						right_wins += 1
 						end_battle(trainer_right, trainer_left)
 						pass
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_DRAW:
@@ -215,6 +227,7 @@ def main():
 				battle.finalize(trainer_left, trainer_right, result)
 
 				in_battle = False
+				log.trace(f"\n(left: {left_wins} - right: {right_wins})\n")
 				os.kill(game_proc.pid, signal.SIGTERM)
 				debugger.exit()
 			else:
