@@ -3,6 +3,9 @@ from enum import IntEnum
 import utils
 from pokemon import trainer, trainermon
 import strings
+from sys import platform
+import shutil
+import os
 from trainer_database import trainer_database
 
 class __site_theme(IntEnum):
@@ -144,7 +147,7 @@ def update_html(_database: trainer_database):
 
 	html += HTML_TRAILER
 
-	with open("website/html/leaderboard.html", "w+") as lb_file:
+	with open("website/leaderboard.html", "w+") as lb_file:
 		lb_file.write(html)
 		lb_file.close()
 

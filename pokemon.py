@@ -340,7 +340,7 @@ def main():
 	trainers_json.close()
 
 if __name__ == "__main__":
-	#main()
+	main()
 #	_trainerdb: trainer_database = trainer_database()
 #	_trainerdb.deserialize_json()
 #	_trainerdb.recalculate("dump/battle_log.txt")

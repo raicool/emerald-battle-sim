@@ -28,7 +28,7 @@ class trainer_database:
 		trainers_json = open("dump/trainers.json", "w")
 		json.dump(self.db, trainers_json)
 		trainers_json.close()
-		shutil.copy("dump/trainers.json", "website/html/trainers.json")
+		shutil.copy("dump/trainers.json", "website/trainers.json")
 	
 	def __trainer_struct_from_list_obj(self, entry: list):
 		_temp: trainer = trainer()
