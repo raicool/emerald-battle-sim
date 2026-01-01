@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import json
 import os
+import shutil
 import uuid
 
 from pokemon import trainer
@@ -72,6 +73,8 @@ class summary:
 
 		json.dump(log_list, battle_log)
 		battle_log.close()
+		shutil.copy(SUMMARY_FILE, "website/html/summary.json")
+
 
 if __name__ == "__main__":
 	_trainerdb: trainer_database = trainer_database()
