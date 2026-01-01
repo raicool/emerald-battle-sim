@@ -24,7 +24,7 @@ from trainer_database import trainer_database
 MGBA_PATH: str = "mgba"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
-FRAME_SIZE: int = 4
+FRAME_SIZE: int = 2
 
 GAME_FASTFORWARD: bool = True
 
@@ -45,7 +45,7 @@ else:
 
 
 def call_mgba() -> subprocess.Popen:
-	settings: str = "-C audioSync={} -C videoSync={} -C fpsTarget={} -C volume={} -C frameSize={}".format(
+	settings: str = "-C audioSync={} -C videoSync={} -C fpsTarget={} -C volume={} --scale {}".format(
 		(1 if AUDIO_SYNC else 0),
 		(1 if VIDEO_SYNC else 0),
 		FPS_TARGET,
