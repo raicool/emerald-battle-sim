@@ -104,10 +104,49 @@ def __table_body_trainerdata(_database: trainer_database) -> str:
 		idx += 1
 	return value
 
+def __sidebar_battle_log() -> str:
+    return str(
+        "<div style=\"float: left; position: fixed; overflow: hidden\">"
+            +"<table class=\"pokesprite\" id=\"battle-log\">"
+                +"<caption>"
+    				+"Battle History"
+ 				+"</caption>"
+                +"<thead>"
+                    +"<tr>"
+                        +"<td>Date</td>"
+                        +"<td>Left Side</td>"
+                        +"<td></td>" # (W/L)
+                        +"<td></td>" # elo + elo delta
+                        +"<td></td>" # rank delta
+                        +"<td>Right Side</td>"
+                        +"<td></td>" # (W/L)
+                        +"<td></td>" # elo + elo delta
+                        +"<td></td>" # rank delta
+                    +"</tr>"
+                +"</thead>"
+                +"<tbody>"
+                    +"<tr>"
+                        +"<td>12/21/2025</td>"
+                        +"<td>Rai</td>"
+                        +"<td>W</td>" # (W/L)
+                        +"<td>1250 (+25)</td>" # elo + elo delta
+                        +"<td>+5</td>" # rank delta
+                        +"<td>pokeplayer534</td>"
+                        +"<td>L</td>" # (W/L)
+                        +"<td>1400 (-30)</td>" # elo + elo delta
+                        +"<td>-7</td>" # rank delta
+                    +"</tr>"
+                +"</tbody>"
+            +"</table>"
+            +"<button type=\"button\">Button</button>"
+        +"</div>"
+    )
+
 def update_html(_database: trainer_database):
 	html: str = HTML_HEADER
 
 	html += str(
+        #__sidebar_battle_log()
 		"<div>"
 			+"<table class=\"pokesprite\" id=\"leaderboard\" style=\"table-layout: fixed;\">"
 				+"<caption>"
