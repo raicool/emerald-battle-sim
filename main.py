@@ -11,15 +11,17 @@ import elo
 import gdb
 import leaderboard
 import log
+from sys import platform
+import shlex
 
 from matchmaking import find_match
 from poke_data import __BattleOutcomeWinner, __BattleBGMs, __BattleBGM_RankOne
 from pokemon import gdb_trainerdata, gdb_partydata, rng, trainer
 from trainer_database import trainer_database
 
-# currently headless mgba does not work with gdb
-# would be a free 5x speed boost but whatever ig
-MGBA_PATH: str = "res/mgba/mgba.exe"
+# headless seemingly only works w/ linux
+# cant get it to work on windows
+MGBA_PATH: str = "mgba"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
 FRAME_SIZE: int = 4
@@ -57,6 +59,9 @@ def call_mgba() -> subprocess.Popen:
 		settings,
 		ELF_BINARY_PATH
 	)
+
+	if platform == "linux":
+		cmd = shlex.split(cmd)
 
 	log.debug(cmd)
 
@@ -124,7 +129,7 @@ def main():
 		log_trainer_introduction(trainer_left, trainer_right)
 
 		game_proc = call_mgba()
-		debugger = GdbController(["arm-none-eabi-gdb.exe", "--interpreter=mi3"], 2)
+		debugger = GdbController(["arm-none-eabi-gdb", "--interpreter=mi3"], 5)
 		gdb.write_command(debugger, f'file {ELF_BINARY_PATH}\ntarget remote :2345', 1)
 		gdb.write_command(debugger,
 # set battle rng
@@ -171,12 +176,16 @@ def main():
 
 			if game_proc.poll() is not None:
 				# assume game_process is terminated willingly
+				debugger.exit()
 				in_battle = False
 				break
 
 			if (len(response) == 0): continue
 
-			payload = response[1].get("payload", "")
+			try:
+				payload = response[1].get("payload", "")
+			except IndexError:
+				continue
 
 			if (type(payload) is str):
 				try:
@@ -207,6 +216,7 @@ def main():
 
 				in_battle = False
 				os.kill(game_proc.pid, signal.SIGTERM)
+				debugger.exit()
 			else:
 				sleep(1)
 
