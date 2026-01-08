@@ -31,6 +31,6 @@ Pokemon emerald battle simulator with a fully functioning elo system and leaderb
 - saved information about the leaderboard are stored in the `dump/` directory, and a viewable html page of the leaderboard is stored at `website/html/leaderboard.html`
 ### todo list
 - [ ] remove requirement for a custom fork of [pokeemerald-expansion](https://github.com/raicool/pokeemerald-expansion) 
-- [ ] prevent database from being recalculated every match, takes a lot of time if there are a lot of matches in the battle logs
+- [X] prevent database from being recalculated every match, takes a lot of time if there are a lot of matches in the battle logs
 
 ![](image-lb.png)
