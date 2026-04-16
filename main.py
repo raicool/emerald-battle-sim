@@ -108,6 +108,8 @@ def main():
 		leaderboard.update_html(_trainerdb)
 		log.log_level = log.level.TRACE
 
+		_trainerdb.try_backup()
+
 		battle_count += 1
 
 		# basic matchmaking

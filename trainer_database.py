@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 import json
+from math import floor
 import os
 import random
 import shutil
+import time
 import uuid
 from elo import calc_game_results
 import elo
@@ -13,6 +15,9 @@ from poke_data import get_rand_trainer_class, get_trainer_pic_id
 from pokemon import construct_trainer_json, trainer, trainermon
 import utils
 
+BACKUP_DIRECTORY: str = "bak/"
+LAST_BAK_TIMESTAMP_FILE: str = BACKUP_DIRECTORY + "latest"
+BACKUP_INTERVAL: int = 1800
 
 @dataclass
 class trainer_database:
@@ -88,6 +93,8 @@ class trainer_database:
 			rank += 1
 	
 	def recalculate(self, log_path: str):
+		recalc_start: float = time.perf_counter()
+		log.info("recalculating elo")
 		if (os.path.isfile(log_path) == False):
 			log.critical("attempted to recalculate db elo with invalid battle log file!\n\t^~~ file does not exist")
 			return
@@ -145,3 +152,31 @@ class trainer_database:
 		elo_json.close()
 
 		self.serialize_json()
+		recalc_elapsed: float = time.perf_counter() - recalc_start
+		log.info(f"finished recalculate (took {recalc_elapsed} seconds.)", )
+
+	def try_backup(self):
+		last_backup_timestamp: int = -1
+		if (os.path.isfile(LAST_BAK_TIMESTAMP_FILE) == True):
+			_file = open(LAST_BAK_TIMESTAMP_FILE, "r+", encoding = "utf-8")
+			_ts_string: str = _file.read()
+
+			try:
+				last_backup_timestamp = int(_ts_string)
+			except ValueError:
+				log.critical(f"ValueError caught while trying to read last backups timestamp in \"{LAST_BAK_TIMESTAMP_FILE}\"")
+		else:
+			_file = open(LAST_BAK_TIMESTAMP_FILE, "w+", encoding = "utf-8")
+		
+		if (floor(time.time()) - last_backup_timestamp > BACKUP_INTERVAL):
+			_now = datetime.now()
+			_new_backup_name: str = _now.strftime("%m-%d-%Y_%H-%M-%S")
+
+			shutil.make_archive(BACKUP_DIRECTORY + _new_backup_name, 'zip', "dump/")
+
+			_file.truncate(0)
+			_file.write(str(floor(time.time())))
+			_file.close()
+			return True
+		else:
+			return False
