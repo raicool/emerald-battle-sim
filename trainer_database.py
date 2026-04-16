@@ -175,6 +175,7 @@ class trainer_database:
 			shutil.make_archive(BACKUP_DIRECTORY + _new_backup_name, 'zip', "dump/")
 
 			_file.truncate(0)
+			_file.seek(0)
 			_file.write(str(floor(time.time())))
 			_file.close()
 			return True
