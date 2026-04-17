@@ -127,7 +127,6 @@ function update_trainer_rows(data)
             if (row.children[1].innerHTML != value.rank)
             {
                 row.children[1].innerHTML = value.rank;
-                change = true
             }
         }
 
