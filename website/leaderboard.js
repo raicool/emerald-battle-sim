@@ -185,6 +185,7 @@ function setup_trainer_rows(table, data)
         add_cell_text(row, value.losses);
         add_cell_text(row, Math.round(100 * wl_ratio) + "%");
         add_cell_text(row, value.battles);
+        add_cell_text(row, value.win_streak);
 
         i++;
     }

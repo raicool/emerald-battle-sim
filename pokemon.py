@@ -70,6 +70,8 @@ class trainer:
 	battles: int = 0
 	wins: int = 0
 	losses: int = 0
+	win_streak: int = 0
+	win_streak_highest: int = 0
 	elo: float = 1000
 	league: str = ""
 	rank: int = 0
@@ -259,6 +261,8 @@ def construct_trainer_json(_trainer: trainer):
 	_json["battles"] = _trainer.battles
 	_json["wins"] = _trainer.wins
 	_json["losses"] = _trainer.losses
+	_json["win_streak"] = _trainer.win_streak
+	_json["win_streak_highest"] = _trainer.win_streak_highest
 	_json["elo"] = _trainer.elo
 	_json["league"] = _trainer.league
 	_json["last_match"] = _trainer.last_match

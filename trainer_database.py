@@ -42,6 +42,8 @@ class trainer_database:
 		_temp.battles = entry.get("battles", 0)
 		_temp.wins = entry.get("wins", 0)
 		_temp.losses = entry.get("losses", 0)
+		_temp.win_streak = entry.get("win_streak", 0)
+		_temp.win_streak_highest = entry.get("win_streak_highest", 0)
 		_temp.elo = entry.get("elo", 1000)
 		_temp.league = entry.get("league", "")
 		_temp.rank = entry.get("rank", 0)
@@ -139,6 +141,11 @@ class trainer_database:
 			self.db[winner_idx]["league"] = new_elos[0].league
 			self.db[winner_idx]["battles"] = new_elos[0].battles
 			self.db[winner_idx]["wins"] = new_elos[0].wins
+			self.db[winner_idx]["win_streak"] = new_elos[0].win_streak + 1
+
+			if (new_elos[0].win_streak_highest > self.db[winner_idx]["win_streak"]):
+				self.db[winner_idx]["win_streak_highest"] = self.db[winner_idx]["win_streak"]
+			
 			elos[new_elos[0].id] = new_elos[0].elo
 
 			self.db[loser_idx]["last_match"] = timestamp
@@ -146,6 +153,8 @@ class trainer_database:
 			self.db[loser_idx]["league"] = new_elos[1].league
 			self.db[loser_idx]["battles"] = new_elos[1].battles
 			self.db[loser_idx]["losses"] = new_elos[1].losses
+			self.db[loser_idx]["win_streak"] = 0
+			
 			elos[new_elos[1].id] = new_elos[1].elo
 
 			battle_count += 1

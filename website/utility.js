@@ -184,7 +184,7 @@ export const pokemon = [
 	"Seaking",
 	"Staryu",
 	"Starmie",
-	"Mr. Mime",
+	"Mr-Mime",
 	"Scyther",
 	"Jynx",
 	"Electabuzz",
@@ -448,5 +448,5 @@ export const pokemon = [
 	"Groudon",
 	"Rayquaza",
 	"Jirachi",
-	"Deoxys-Normal"
+	"Deoxys"
 ]
