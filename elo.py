@@ -11,7 +11,7 @@ import utils
 ELO_FILE: str = "dump/elo.json"
 MATCHMAKING_ELO_DIFFERENCE_MAX: float = 50
 K_FACTOR: float = 60
-DECREASE_RATE: float = 0.2
+DECREASE_RATE: float = 0.15
 INCREASE_RATE: float = 0.7
 MAX_GAIN: float = 128
 MAX_LOSS: float = -45
@@ -27,6 +27,7 @@ PLACEMENT_MATCHES: int = 4
 
 leagues: dict[float, str] = {
 	0: "poke",
+	1001: "nest",
 	1100: "great",
 	1200: "ultra",
 	1300: "premier",
