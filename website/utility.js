@@ -1,4 +1,4 @@
-const get_cell_value = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+const get_cell_value = (tr, idx) => tr.children[idx].hasAttribute("sort_val") ? tr.children[idx].getAttribute("sort_val") : tr.children[idx].innerText || tr.children[idx].textContent;
 
 export const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
 	v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)

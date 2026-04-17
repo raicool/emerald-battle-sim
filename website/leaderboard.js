@@ -42,42 +42,47 @@ function sort_table(table, switch_mode = true)
 
 setInterval(read_dump_data, 5000) // 5 second interval
 
-function add_cell_text(row, text)
+function add_cell_text(row, text, sort_val = text)
 {
-	const cell = row.insertCell();
-
 	// Append a text node to the cell
-	const node = document.createTextNode(text);
-	cell.appendChild(node);
+	const [node, ] = add_cell_element(row, "a", sort_val)
+
+    node.innerHTML = text
+
     return node;
 }
 
-function add_cell_image(row, src, _class)
+function add_cell_image(row, src, _class, sort_val = null)
 {
-	const cell = row.insertCell();
-
 	// Append a text node to the cell
-	const img = document.createElement("img");
+	const [img, ] = add_cell_element(row, "img", sort_val)
+
     img.setAttribute("src", src);
     img.setAttribute("class", _class);
-	cell.appendChild(img);
+    
     return img;
 }
 
-function add_cell_element(row, element_tag)
+function add_cell_element(row, element_tag, sort_val = null)
 {
 	const cell = row.insertCell();
 
 	// Append a text node to the cell
 	const e = document.createElement(element_tag);
+
+    if (sort_val != null)
+    {
+        cell.setAttribute("sort_val", sort_val);
+    }
+
 	cell.appendChild(e);
-    return e;
+    return [e, cell];
 }
 
-function add_pkmn_image(row, src, pkmn_data)
+function add_pkmn_image(row, src, pkmn_data, sort_val = null)
 {
-    const cell = row.insertCell();
-    const img = document.createElement("img");
+    const [img, cell] = add_cell_element(row, "img", sort_val);
+
     img.setAttribute("class", "p");
     img.setAttribute("src", src)
     cell.setAttribute("class", "image");
@@ -106,7 +111,6 @@ function add_pkmn_image(row, src, pkmn_data)
         tooltip.innerHTML = ""
     }
 
-    cell.appendChild(img);
     return img;
 }
 
@@ -118,7 +122,6 @@ function read_dump_data()
 
 			var table = document.getElementById("leaderboard");
 
-			var i = 0;
             if (ready)
             {
                 update_trainer_rows(data)
@@ -206,20 +209,20 @@ function setup_trainer_rows(table, data)
         var row = body.insertRow();
         row.id = "pidx" + i;
 
-        add_cell_text(row, timestamp_diff(value.last_match));
+        add_cell_text(row, timestamp_diff(value.last_match), value.last_match);
 
         add_cell_text(row, value.rank);
 
-        var trainer_img = add_cell_image(row, `sprites/mugshot/${value.trainer_pic}.png`, "mugshot");
+        var trainer_img = add_cell_image(row, `sprites/mugshot/${value.trainer_pic}.png`, "mugshot", value.trainer_class);
         trainer_img.setAttribute("class", "mugshot");
 
-        var trainer_name = add_cell_element(row, "a");
+        var [trainer_name, ] = add_cell_element(row, "a");
         trainer_name.innerHTML = value.name;
         trainer_name.setAttribute("href", `player.html?id=${value.id}`)
 
         add_cell_image(row, LEAGUE_SPRITE_URL + `${value.league}.png`);
 
-        var tid = add_cell_element(row, "code");
+        var [tid, ] = add_cell_element(row, "code");
         tid.innerHTML = value.id;
         tid.setAttribute("class", "code");
 
