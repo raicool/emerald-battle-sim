@@ -48,15 +48,13 @@ def info(msg: str):
     if (log_level <= level.TRACE):
         __printlog(msg, Fore.GREEN)
 
-
-
 def __printlog(msg: str, foreground_col: str, background_col: str = ""):
     global current_file_buffer
     caller = getframeinfo(stack()[2][0])
 
     color = foreground_col + background_col
     caller_det: str = color + "{}:{}".format(caller.filename, caller.lineno) + Fore.RESET
-    caller_det_console: str = "{}:{}".format(caller.filename, caller.lineno)
+    caller_det_file: str = "{}:{}".format(caller.filename, caller.lineno)
 
     format: str = "{} {}: {!s}".format(
         datetime.now(),
@@ -64,13 +62,12 @@ def __printlog(msg: str, foreground_col: str, background_col: str = ""):
         msg
     )
 
-    format_console: str = "{} {}: {!s}".format(
+    format_file_sink: str = "{} {}: {!s}\n".format(
         datetime.now(),
-        caller_det_console,
+        caller_det_file,
         msg
     )
     
-    
     print(format)
-    current_file_buffer.write(format_console)
+    current_file_buffer.write(format_file_sink)
     current_file_buffer.flush()
