@@ -11,6 +11,14 @@
 	align-content: center;
 }
 
+#winner {
+	color: green
+}
+
+#loser {
+	color: red
+}
+
 #pkmn-inspect {
 	border-radius: 8px;
 	padding: 8px; 

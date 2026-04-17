@@ -90,7 +90,8 @@ function add_pkmn_image(row, src, pkmn_data, sort_val = null)
 		tooltip.style.visibility = "visible"
 		tooltip.innerHTML = 
 		"<pre>"+
-			`${pokemon[pkmn_data.species]} Level: ${pkmn_data.level}\n`+
+			`${pokemon[pkmn_data.species]}\n`
+			`Level: ${pkmn_data.level}\n`+
 			`Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
 			`Item: ${item[pkmn_data.item + 3]}\n`+
 			`Ability: ${ability[pkmn_data.ability]}\n`+
@@ -170,22 +171,22 @@ function read_dump_data()
 					player_name_text(row, value.left_name, value.left_uuid)
 
 					const left_outcome = value.winner_side == 1
-					const left_outcome_cell = add_cell_text(row, left_outcome ? "W" : "L");
-					left_outcome_cell.style.color = left_outcome ? "rgb(0, 255, 0);" : "rgb(255, 0, 0);"
+					var left_outcome_cell = add_cell_text(row, left_outcome ? "Won" : "Lost");
+					left_outcome_cell.id = left_outcome ? "winner" : "loser"
 
 					add_cell_text(row, `${Math.round(value.left_elo_final)} (${Math.round(value.left_elo_delta)})`);
-					add_cell_text(row, value.left_rank_delta);
+					add_cell_text(row, `${value.left_rank_final} (${value.left_rank_delta})`);
 
 
 					// player right
 					player_name_text(row, value.right_name, value.right_uuid)
 
 					const right_outcome = value.winner_side == 2
-					const right_outcome_cell = add_cell_text(row, right_outcome ? "W" : "L");
-					right_outcome_cell.style.color = right_outcome ? "rgb(0, 255, 0);" : "rgb(255, 0, 0);"
+					var right_outcome_cell = add_cell_text(row, right_outcome ? "Won" : "Lost");
+					right_outcome_cell.id = right_outcome ? "winner" : "loser"
 
 					add_cell_text(row, `${Math.round(value.right_elo_final)} (${Math.round(value.right_elo_delta)})`);
-					add_cell_text(row, value.right_rank_delta);
+					add_cell_text(row, `${value.right_rank_final} (${value.right_rank_delta})`);
 				}
 			}
 		}
