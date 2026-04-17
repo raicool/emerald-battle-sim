@@ -1,16 +1,22 @@
 #trainer-class {
-    image-rendering: crisp-edges;
-    display: block;
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
+	image-rendering: crisp-edges;
+	display: block;
+	object-fit: contain;
+	width: 100%;
+	height: 100%;
 }
 
 .trainer-card {
-    margin: 0px auto;
-    align-content: center;
+	margin: 0px auto;
+	align-content: center;
+}
+
+#leaderboard {
+	max-height: 100vh;
+	overflow-y: scroll;
+	margin: 0px;
 }
 
 #label {
-    font-weight: bold;
+	font-weight: bold;
 }
