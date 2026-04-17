@@ -112,7 +112,7 @@ function add_pkmn_image(row, src, pkmn_data)
 
 function read_dump_data()
 {
-	read_file("trainers.json", function(file)
+	read_file("../dump/trainers.json", function(file)
 		{
 			var data = JSON.parse(file);
 
@@ -135,7 +135,7 @@ function read_dump_data()
 		}
 	)
 
-	read_file("summary.json", function(file)
+	read_file("../dump/summary.json", function(file)
 		{
 			var data = JSON.parse(file);
 

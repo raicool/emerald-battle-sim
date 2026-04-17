@@ -97,7 +97,6 @@ class summary:
 
 		json.dump(log_list, battle_log)
 		battle_log.close()
-		shutil.copy(SUMMARY_FILE, "website/summary.json")
 
 
 if __name__ == "__main__":
