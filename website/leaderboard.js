@@ -13,22 +13,20 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
 	sort_table(table);
 })));
 
-var tooltip = document.createElement("div")
-tooltip.setAttribute("style", "padding: 8px; min-width: 256px; min-height: 256px; position: fixed; background-color: rgba(70, 72, 77, 0.78); color: rgb(255, 255, 255); font-size: 16px; font-family: consolas,monospace")
-document.body.appendChild(tooltip)
+var tooltip = document.getElementById("pkmn-inspect")
 
 const move = (e) => 
 {
-    var x = e.pageX
-    var y = e.pageY;
-    //set left and top of div based on mouse position
-    tooltip.style.left = x + "px";
-    tooltip.style.top = (y + 16) + "px";
+	var x = e.pageX
+	var y = e.pageY;
+	//set left and top of div based on mouse position
+	tooltip.style.left = x + "px";
+	tooltip.style.top = (y + 16) + "px";
 };
 
 document.addEventListener("mousemove", (e) => 
 {
-    move(e);
+	move(e);
 });
 
 
@@ -42,14 +40,14 @@ function sort_table(table, switch_mode = true)
 
 setInterval(read_dump_data, 5000) // 5 second interval
 
-function add_cell_text(row, text, sort_val = text)
+function add_cell_text(row, text, sort_val = null)
 {
 	// Append a text node to the cell
 	const [node, ] = add_cell_element(row, "a", sort_val)
 
-    node.innerHTML = text
+	node.innerHTML = text
 
-    return node;
+	return node;
 }
 
 function add_cell_image(row, src, _class, sort_val = null)
@@ -57,10 +55,10 @@ function add_cell_image(row, src, _class, sort_val = null)
 	// Append a text node to the cell
 	const [img, ] = add_cell_element(row, "img", sort_val)
 
-    img.setAttribute("src", src);
-    img.setAttribute("class", _class);
-    
-    return img;
+	img.setAttribute("src", src);
+	img.setAttribute("class", _class);
+	
+	return img;
 }
 
 function add_cell_element(row, element_tag, sort_val = null)
@@ -70,48 +68,61 @@ function add_cell_element(row, element_tag, sort_val = null)
 	// Append a text node to the cell
 	const e = document.createElement(element_tag);
 
-    if (sort_val != null)
-    {
-        cell.setAttribute("sort_val", sort_val);
-    }
+	if (sort_val != null)
+	{
+		cell.setAttribute("sort_val", sort_val);
+	}
 
 	cell.appendChild(e);
-    return [e, cell];
+	return [e, cell];
 }
 
 function add_pkmn_image(row, src, pkmn_data, sort_val = null)
 {
-    const [img, cell] = add_cell_element(row, "img", sort_val);
+	const [img, cell] = add_cell_element(row, "img", sort_val);
 
-    img.setAttribute("class", "p");
-    img.setAttribute("src", src)
-    cell.setAttribute("class", "image");
+	img.setAttribute("class", "p");
+	img.setAttribute("src", src)
+	cell.setAttribute("class", "image");
 
-    img.onmouseover = function() 
-    { 
-        tooltip.style.visibility = "visible"
-        tooltip.innerHTML = 
-        "<pre>"+
-            `${pokemon[pkmn_data.species]} Level: ${pkmn_data.level}\n`+
-            `Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
-            `Item: ${item[pkmn_data.item + 3]}\n`+
-            `Ability: ${ability[pkmn_data.ability]}\n`+
-            `Nature: ${nature[pkmn_data.nature]}\n`+
-            "Moves:\n"+
-            `    ${move_name[pkmn_data.moves[0]]}\n`+
-            `    ${move_name[pkmn_data.moves[1]]}\n`+
-            `    ${move_name[pkmn_data.moves[2]]}\n`+
-            `    ${move_name[pkmn_data.moves[3]]}`+
-        "</pre>"
-    }
+	img.onmouseover = function() 
+	{ 
+		tooltip.style.visibility = "visible"
+		tooltip.innerHTML = 
+		"<pre>"+
+			`${pokemon[pkmn_data.species]} Level: ${pkmn_data.level}\n`+
+			`Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
+			`Item: ${item[pkmn_data.item + 3]}\n`+
+			`Ability: ${ability[pkmn_data.ability]}\n`+
+			`Nature: ${nature[pkmn_data.nature]}\n`+
+			"Moves:\n"+
+			`    ${move_name[pkmn_data.moves[0]]}\n`+
+			`    ${move_name[pkmn_data.moves[1]]}\n`+
+			`    ${move_name[pkmn_data.moves[2]]}\n`+
+			`    ${move_name[pkmn_data.moves[3]]}`+
+		"</pre>"
+	}
 
-    img.onmouseout = function() 
-    { 
-        tooltip.style.visibility = "hidden"
-        tooltip.innerHTML = ""
-    }
+	img.onmouseout = function() 
+	{ 
+		tooltip.style.visibility = "hidden"
+		tooltip.innerHTML = ""
+	}
 
-    return img;
+	return img;
+}
+
+function player_stat_text(row, value, sort_value = null)
+{
+	const statistic = add_cell_text(row, String(value), sort_value)
+	statistic.id = "player-stat"
+}
+
+function player_name_text(row, name, uuid)
+{
+	var [trainer_name, ] = add_cell_element(row, "a");
+	trainer_name.innerHTML = name;
+	trainer_name.setAttribute("href", `player.html?id=${uuid}`)
 }
 
 function read_dump_data()
@@ -122,14 +133,14 @@ function read_dump_data()
 
 			var table = document.getElementById("leaderboard");
 
-            if (ready)
-            {
-                update_trainer_rows(data)
-            }
-            else
-            {
-                setup_trainer_rows(table, data)
-            }
+			if (ready)
+			{
+				update_trainer_rows(data)
+			}
+			else
+			{
+				setup_trainer_rows(table, data)
+			}
 			
 			if (selected_header)
 			{
@@ -154,13 +165,25 @@ function read_dump_data()
 					var row = body.insertRow();
 					var date = new Date(value.timestamp * 1000);
 					add_cell_text(row, date.toLocaleTimeString());
-					add_cell_text(row, value.left_name);
-					add_cell_text(row, value.winner_side == 1 ? "W" : "L");
+
+					// player left
+					player_name_text(row, value.left_name, value.left_uuid)
+
+					const left_outcome = value.winner_side == 1
+					const left_outcome_cell = add_cell_text(row, left_outcome ? "W" : "L");
+					left_outcome_cell.style.color = left_outcome ? "rgb(0, 255, 0);" : "rgb(255, 0, 0);"
+
 					add_cell_text(row, `${Math.round(value.left_elo_final)} (${Math.round(value.left_elo_delta)})`);
 					add_cell_text(row, value.left_rank_delta);
 
-					add_cell_text(row, value.right_name);
-					add_cell_text(row, value.winner_side == 2 ? "W" : "L");
+
+					// player right
+					player_name_text(row, value.right_name, value.right_uuid)
+
+					const right_outcome = value.winner_side == 2
+					const right_outcome_cell = add_cell_text(row, right_outcome ? "W" : "L");
+					right_outcome_cell.style.color = right_outcome ? "rgb(0, 255, 0);" : "rgb(255, 0, 0);"
+
 					add_cell_text(row, `${Math.round(value.right_elo_final)} (${Math.round(value.right_elo_delta)})`);
 					add_cell_text(row, value.right_rank_delta);
 				}
@@ -171,82 +194,80 @@ function read_dump_data()
 
 function update_trainer_rows(data)
 {
-    var i = 0;
-    for (const [key, value] of Object.entries(data))
-    {
-        const row = document.getElementById("pidx" + i);
-        if (value.hasOwnProperty("last_match"))
-        {
-            row.children[0].innerHTML = timestamp_diff(value.last_match)
-        }
+	var i = 0;
+	for (const [key, value] of Object.entries(data))
+	{
+		const row = document.getElementById("pidx" + i);
+		if (value.hasOwnProperty("last_match"))
+		{
+			row.children[0].innerHTML = timestamp_diff(value.last_match)
+		}
 
-        if (value.hasOwnProperty("rank"))
-        {
-            if (row.children[1].innerHTML != value.rank)
-            {
-                row.children[1].innerHTML = value.rank;
-            }
-        }
+		if (value.hasOwnProperty("rank"))
+		{
+			if (row.children[1].innerHTML != value.rank)
+			{
+				row.children[1].innerHTML = value.rank;
+			}
+		}
 
-        if (value.hasOwnProperty("elo"))
-        {
-            row.children[12].innerHTML = Math.round(value.elo);
-        }
+		if (value.hasOwnProperty("elo"))
+		{
+			row.children[12].innerHTML = Math.round(value.elo);
+		}
 
-        i++;
-    }
+		i++;
+	}
 }
 
 var ready = false;
 function setup_trainer_rows(table, data)
 {
-    var body = table.tBodies[0];
+	var body = table.tBodies[0];
 	body.innerHTML = "";
 
-    var i = 0;
-    for (const [, value] of Object.entries(data))
-    {
-        var row = body.insertRow();
-        row.id = "pidx" + i;
+	var i = 0;
+	for (const [, value] of Object.entries(data))
+	{
+		var row = body.insertRow();
+		row.id = "pidx" + i;
 
-        add_cell_text(row, timestamp_diff(value.last_match), value.last_match);
+		add_cell_text(row, timestamp_diff(value.last_match), value.last_match);
 
-        add_cell_text(row, value.rank);
+		add_cell_text(row, value.rank);
 
-        var trainer_img = add_cell_image(row, `sprites/mugshot/${value.trainer_pic}.png`, "mugshot", value.trainer_class);
-        trainer_img.setAttribute("class", "mugshot");
+		var trainer_img = add_cell_image(row, `sprites/mugshot/${value.trainer_pic}.png`, "mugshot", value.trainer_class);
+		trainer_img.setAttribute("class", "mugshot");
 
-        var [trainer_name, ] = add_cell_element(row, "a");
-        trainer_name.innerHTML = value.name;
-        trainer_name.setAttribute("href", `player.html?id=${value.id}`)
+		player_name_text(row, value.name, value.id)
 
-        add_cell_image(row, LEAGUE_SPRITE_URL + `${value.league}.png`);
+		add_cell_image(row, LEAGUE_SPRITE_URL + `${value.league}.png`);
 
-        var [tid, ] = add_cell_element(row, "code");
-        tid.innerHTML = value.id;
-        tid.setAttribute("class", "code");
+		var [tid, ] = add_cell_element(row, "code");
+		tid.innerHTML = value.id;
+		tid.setAttribute("class", "code");
 
-        const party = value.party;
-        for (const pkmn of party)
-        {
-            add_pkmn_image(
-                row, 
-                `${BOX_SPRITE_URL}${pkmn.shiny ? "shiny/" : "regular/"}${pokemon[pkmn.species].toLowerCase()}.png`,
-                pkmn
-            );
-        }
+		const party = value.party;
+		for (const pkmn of party)
+		{
+			add_pkmn_image(
+				row, 
+				`${BOX_SPRITE_URL}${pkmn.shiny ? "shiny/" : "regular/"}${pokemon[pkmn.species].toLowerCase()}.png`,
+				pkmn
+			);
+		}
 
-        add_cell_text(row, Math.round(value.elo));
-        const wl_ratio = value.wins / (value.wins + value.losses);
-        add_cell_text(row, value.wins);
-        add_cell_text(row, value.losses);
-        add_cell_text(row, Math.round(100 * wl_ratio) + "%");
-        add_cell_text(row, value.battles);
-        add_cell_text(row, value.win_streak);
+		player_stat_text(row, Math.round(value.elo));
+		const wl_ratio = value.wins / (value.wins + value.losses);
+		player_stat_text(row, value.wins);
+		player_stat_text(row, value.losses);
+		player_stat_text(row, Math.round(100 * wl_ratio) + "%");
+		player_stat_text(row, value.battles);
+		player_stat_text(row, value.win_streak);
 
-        i++;
-    }
-    ready = true;
+		i++;
+	}
+	ready = true;
 }
 
 read_dump_data();

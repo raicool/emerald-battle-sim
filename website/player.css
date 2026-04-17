@@ -11,10 +11,43 @@
 	align-content: center;
 }
 
+#pkmn-inspect {
+	border-radius: 8px;
+	padding: 8px; 
+	min-width: 256px; 
+	min-height: 256px; 
+	position: fixed; 
+	background-color: rgba(70, 72, 77, 0.78); 
+	color: rgb(255, 255, 255); 
+	font-size: 16px; 
+	font-family: consolas, monospace; 
+	left: 943px; 
+	top: 819px; 
+	visibility: hidden;
+}
+
 #leaderboard {
 	max-height: 100vh;
 	overflow-y: scroll;
 	margin: 0px;
+	color: rgb(187, 187, 187)
+}
+
+#leaderboard thead {
+	position: sticky;
+	top: 0;
+}
+
+#battle-log {
+	max-height: 100vh;
+	overflow-y: scroll;
+	margin: 0px;
+	color: rgb(187, 187, 187)
+}
+
+#battle-log thead {
+	position: sticky;
+	top: 0;
 }
 
 #label {

@@ -4,9 +4,10 @@
     <title>Battle Leaderboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="github-markdown-light.css">
+    <link rel="stylesheet" id="page-theme" href="github-markdown-light.css">
     <link rel="stylesheet" href="pokesprite-docs.css">
 	<link rel="stylesheet" href="player.css">
+    <script type="module" src="theme.js"></script>
     <script type="module" src="utility.js"></script>
     <script type="module" src="constants.js"></script>
     <style>
@@ -28,11 +29,11 @@
 
 <body style="margin: 0px; padding: 0px; overflow: hidden">
     <div class="markdown-body" style="max-width: 100%;">
-        <table style="width: 100%; border: 0;">
+        <table style="width: 100%; border: 0; display: table;">
             <tbody>
 				<tr>
 					<td style="width: 35%; padding: 0px; vertical-align: top;">
-						<table class="pokesprite" id="battle-log" style="max-height: 100vh; overflow-y: scroll; ">
+						<table class="pokesprite" id="battle-log" ">
 							<caption>Battle History</caption>
 							<thead>
 								<tr>
@@ -52,7 +53,7 @@
 							</tbody>
 						</table><button type="button">Button</button>
 					</td>
-					<td style="width: 65%; padding: 0px; vertical-align: top;">
+					<td style="min-width: 65%; padding: 0px; vertical-align: top;">
 							<table class="pokesprite" id="leaderboard">
 								<caption>
 									<header>Emerald Battle Simulator Leaderboard</header><i>as of </i>
@@ -89,6 +90,6 @@
 			</tbody>
 		</table>
     </div>
-	<div style="padding: 8px; min-width: 256px; min-height: 256px; position: fixed; background-color: rgba(70, 72, 77, 0.78); color: rgb(255, 255, 255); font-size: 16px; font-family: consolas, monospace; left: 943px; top: 819px; visibility: hidden;"></div>
+	<div id="pkmn-inspect"></div>
 </body>
 </html>
