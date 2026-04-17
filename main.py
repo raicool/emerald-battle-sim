@@ -3,6 +3,7 @@ from datetime import datetime
 import os
 import random
 import signal
+from uuid import uuid4
 from colorama import Fore
 from pygdbmi.gdbcontroller import GdbController
 import subprocess
@@ -21,23 +22,26 @@ from trainer_database import trainer_database
 
 # headless seemingly only works w/ linux
 # cant get it to work on windows
-MGBA_PATH: str = "mgba"
+MGBA_PATH: str = "res/mgba/mgba.exe"
 ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
-FRAME_SIZE: int = 2
+FRAME_SIZE: int = 4
+
+SELF_TRAINER_ID: str = "e3665f60-4e12-4306-a77b-f19149d3166c"
+SELF_BATTLE_ENABLE: bool = False
 
 GAME_FASTFORWARD: bool = True
 
 if (GAME_FASTFORWARD):
 	# fast settings
-	BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss0"
+	BATTLE_SAVESTATE: str = "res/startbattle_no_animations.ss1"
 	AUDIO_SYNC: bool = False
 	VIDEO_SYNC: bool = False
 	FPS_TARGET: int = 25565
 	GAME_VOLUME: int = 0
 else:
 	# normal speed settings
-	BATTLE_SAVESTATE: str = "res/startbattle.ss0"
+	BATTLE_SAVESTATE: str = "res/startbattle.ss1"
 	AUDIO_SYNC: bool = True
 	VIDEO_SYNC: bool = True
 	FPS_TARGET: int = 59.7275
@@ -106,6 +110,7 @@ def main():
 		__gBattleTransition: int = 0
 		__gBattleMusic: int = 0
 		__gRngValue: rng = rng()
+		__gAutoBattle: bool = True
 		
 		log.log_level = log.level.TRACE
 
@@ -115,7 +120,14 @@ def main():
 
 		# basic matchmaking
 		# finds two trainers inside of the database with similar elo
-		trainer_left, trainer_right = find_match(_trainerdb)
+		trainer_left, trainer_right = find_match(_trainerdb, SELF_BATTLE_ENABLE, SELF_TRAINER_ID)
+		
+		if (trainer_right.id == SELF_TRAINER_ID):
+			# swap trainers
+			trainer_left, trainer_right = trainer_right, trainer_left
+		
+		__gAutoBattle = (trainer_left.id != SELF_TRAINER_ID)
+
 		battle: summary = summary(trainer_left, trainer_right)
 
 #		if (left_wins >= 2):
@@ -151,6 +163,7 @@ def main():
 			f"set gRngValue.ctr = {__gRngValue.ctr}\n"
 
 # set my custom variables
+			f"set gAutoBattle = {1 if __gAutoBattle else 0}\n"
 			f"set gBattleMusic = {__gBattleMusic}\n"
 			f"set gBattleTransition = {__gBattleTransition}\n"
 			f"set gTrainerLeftTrainerBackPicID = {4 if trainer_left.gender == 0 else 5}\n"
