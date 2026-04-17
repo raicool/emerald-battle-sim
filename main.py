@@ -93,6 +93,8 @@ def main():
 
 	global _trainerdb
 	battle_count: int = 0
+	upsets: int = 0
+	elo_accuracy: float = 0
 	
 	_trainerdb.deserialize_json()
 	_trainerdb.recalculate("dump/battle_log.txt")
@@ -214,11 +216,15 @@ def main():
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_LEFT:
 						log.trace(f"\n{trainer_left.name} has won the match!\n")
 						left_wins += 1
+						if (trainer_left.elo >= trainer_right.elo):
+							upsets += 1
 						end_battle(trainer_left, trainer_right)
 						pass
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_RIGHT:
 						log.trace(f"\n{trainer_right.name} has won the match!\n")
 						right_wins += 1
+						if (trainer_right.elo >= trainer_left.elo):
+							upsets += 1
 						end_battle(trainer_right, trainer_left)
 						pass
 					case __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_DRAW:
@@ -227,9 +233,13 @@ def main():
 				trainer_left.rank = _trainerdb.trainer_from_uuid(trainer_left.id).rank
 				trainer_right.rank = _trainerdb.trainer_from_uuid(trainer_right.id).rank
 				battle.finalize(trainer_left, trainer_right, result)
+				elo_accuracy = (upsets / battle_count)
 
 				in_battle = False
-				log.trace(f"\n(left: {left_wins} - right: {right_wins})\n")
+				log.trace(
+					f"\n(left: {left_wins} - right: {right_wins})\n"
+					f"\nelo_accuracy: {elo_accuracy:.0%}\n"
+					)
 				os.kill(game_proc.pid, signal.SIGTERM)
 				debugger.exit()
 			else:
