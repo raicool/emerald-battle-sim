@@ -107,7 +107,6 @@ def main():
 		__gBattleMusic: int = 0
 		__gRngValue: rng = rng()
 		
-		leaderboard.update_html(_trainerdb)
 		log.log_level = log.level.TRACE
 
 		_trainerdb.try_backup()
