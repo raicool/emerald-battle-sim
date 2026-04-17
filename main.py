@@ -83,7 +83,7 @@ def write_battle_log(winner: trainer, loser: trainer, previous_elo: tuple[float,
 def log_trainer_introduction(left: trainer, right: trainer):
 	left_card: str = str(f"{left.name} ({int(left.elo)}, Rank {left.rank})") 
 	right_card: str = str(f"{right.name} ({int(right.elo)}, Rank {right.rank})") 
-	log.trace(
+	log.info(
 			"\n----------------------------------------------------------------------------"
 		   f"\n{left_card:^36} vs {right_card:^36}"
 		   f"\n{Fore.LIGHTBLACK_EX}{left.id}    {right.id}{Fore.RESET}"

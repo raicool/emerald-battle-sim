@@ -1,3 +1,5 @@
+import time
+
 import elo
 import log
 from pokemon import trainer
@@ -5,6 +7,7 @@ from trainer_database import trainer_database
 
 
 def find_match(database: trainer_database, self_battle_enable: bool = False, self_trainer_id: str = "") -> tuple[trainer, trainer]:
+	begin_time: float = time.perf_counter()
 	matchmaking: bool = True
 	attempts: int = 1
 	range = elo.MATCHMAKING_ELO_DIFFERENCE_MAX
@@ -23,15 +26,18 @@ def find_match(database: trainer_database, self_battle_enable: bool = False, sel
 		trainer_right: trainer = database.random_trainer()
         
 		if (trainer_left.id == trainer_right.id):
-			log.trace("avoiding ditto battle!")
+			log.debug("avoiding ditto battle!")
 			continue
 
 		if (abs(trainer_left.elo - trainer_right.elo) < range and trainer_right.id != self_trainer_id):
+			elapsed: float = time.perf_counter() - begin_time
+			log.trace(f"match found! (took {round(elapsed, 3)} sec)")
 			matchmaking = False
 			break
 		else:
 			attempts += 1
 			if (attempts > range):
 				range += elo.MATCHMAKING_ELO_DIFFERENCE_MAX
+				log.info(f"matchmaking attempts: {attempts}; expanding elo range to {round(trainer_left.elo - range)}-{round(trainer_left.elo + range)} elo.")
 	
 	return trainer_left, trainer_right

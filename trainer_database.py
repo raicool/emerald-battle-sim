@@ -66,6 +66,7 @@ class trainer_database:
 		for i in self.db.values():
 			if i["id"] == uuid:
 				return self.__trainer_struct_from_list_obj(i)
+		log.critical(f"trainer_from_uuid(): could not find trainer with uuid \"{uuid}\" in database")
 		return None
 	
 	def update_trainer(self, uuid: str, new_data: trainer):
@@ -77,6 +78,7 @@ class trainer_database:
 		for i in self.db:
 			if self.db[i]["id"] == uuid:
 				return i
+		log.critical(f"find_trainer_index(): could not find trainer index with uuid \"{uuid}\" in database")
 		return -1
 	
 	def rank_trainers(self, elo_file):
@@ -91,10 +93,13 @@ class trainer_database:
 	
 	def recalculate(self, log_path: str):
 		recalc_start: float = time.perf_counter()
+
 		log.info("recalculating elo")
+
 		if (os.path.isfile(log_path) == False):
 			log.critical("attempted to recalculate db elo with invalid battle log file!\n\t^~~ file does not exist")
 			return
+		
 		battle_log = open(log_path, "r+", encoding = "utf-16")
 		elo_json = open(elo.ELO_FILE, "w+", encoding = "utf-8")
 		elo_json.truncate(0)
@@ -104,13 +109,20 @@ class trainer_database:
 			player["battles"] = 0
 			player["wins"] = 0
 			player["losses"] = 0
+			player["win_streak"] = 0
+			player["win_streak_highest"] = 0
 			player["elo"] = 1000
+		
+		log.info("successfully reset all player stats to zero")
 
 		elos: dict[int, float] = {}
 		battle_count: int = 0
 		higher_elo_wins_count: int = 0
 		while split := battle_log.readline().rsplit():
-			if (len(split) < 2): continue
+			if (len(split) < 2):
+				log.critical("recalculate(): error while reading battle log lines (len(battle_log.readline().rsplit()) < 2 returned true)")
+				continue
+			
 			winner_uuid: str = split[0]
 			loser_uuid: str = split[1]
 
@@ -155,8 +167,6 @@ class trainer_database:
 			battle_count += 1
 			if (winner.elo > loser.elo):
 				higher_elo_wins_count += 1
-            
-			#log.debug(f"winner: {winner_uuid}\nloser: {loser_uuid}")
 		
 		elo_accuracy: float = float(higher_elo_wins_count) / float(battle_count)
 		# scuffed method of calculating player rank
