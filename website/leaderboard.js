@@ -1,4 +1,5 @@
-import { read_file, comparer, pokemon, timestamp_diff } from "./utility.js";
+import { read_file, comparer, timestamp_diff } from "./utility.js";
+import { pokemon, move_name, item, nature, ability } from "./constants.js";
 
 const BOX_SPRITE_URL = "https://raw.githubusercontent.com/msikma/pokesprite/master/pokemon-gen7x/"
 const LEAGUE_SPRITE_URL = "https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/"
@@ -11,6 +12,24 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
 	const table = th.closest('table');
 	sort_table(table);
 })));
+
+var tooltip = document.createElement("div")
+tooltip.setAttribute("style", "padding: 8px; min-width: 256px; min-height: 256px; position: fixed; background-color: rgba(70, 72, 77, 0.78); color: rgb(255, 255, 255); font-size: 16px; font-family: consolas,monospace")
+document.body.appendChild(tooltip)
+
+const move = (e) => 
+{
+    var x = e.pageX
+    var y = e.pageY;
+    //set left and top of div based on mouse position
+    tooltip.style.left = x + "px";
+    tooltip.style.top = (y + 16) + "px";
+};
+
+document.addEventListener("mousemove", (e) => 
+{
+    move(e);
+});
 
 
 function sort_table(table, switch_mode = true)
@@ -53,6 +72,42 @@ function add_cell_element(row, element_tag)
 	const e = document.createElement(element_tag);
 	cell.appendChild(e);
     return e;
+}
+
+function add_pkmn_image(row, src, pkmn_data)
+{
+    const cell = row.insertCell();
+    const img = document.createElement("img");
+    img.setAttribute("class", "p");
+    img.setAttribute("src", src)
+    cell.setAttribute("class", "image");
+
+    img.onmouseover = function() 
+    { 
+        tooltip.style.visibility = "visible"
+        tooltip.innerHTML = 
+        "<pre>"+
+            `${pokemon[pkmn_data.species]} Level: ${pkmn_data.level}\n`+
+            `Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
+            `Item: ${item[pkmn_data.item + 3]}\n`+
+            `Ability: ${ability[pkmn_data.ability]}\n`+
+            `Nature: ${nature[pkmn_data.nature]}\n`+
+            "Moves:\n"+
+            `    ${move_name[pkmn_data.moves[0]]}\n`+
+            `    ${move_name[pkmn_data.moves[1]]}\n`+
+            `    ${move_name[pkmn_data.moves[2]]}\n`+
+            `    ${move_name[pkmn_data.moves[3]]}`+
+        "</pre>"
+    }
+
+    img.onmouseout = function() 
+    { 
+        tooltip.style.visibility = "hidden"
+        tooltip.innerHTML = ""
+    }
+
+    cell.appendChild(img);
+    return img;
 }
 
 function read_dump_data()
@@ -171,12 +226,11 @@ function setup_trainer_rows(table, data)
         const party = value.party;
         for (const pkmn of party)
         {
-            var img = add_cell_image(
+            add_pkmn_image(
                 row, 
-                `${BOX_SPRITE_URL}${pkmn.shiny ? "shiny/" : "regular/"}${pokemon[pkmn.species].toLowerCase()}.png`
+                `${BOX_SPRITE_URL}${pkmn.shiny ? "shiny/" : "regular/"}${pokemon[pkmn.species].toLowerCase()}.png`,
+                pkmn
             );
-            img.setAttribute("class", "p");
-            img.parentNode.setAttribute("class", "image");
         }
 
         add_cell_text(row, Math.round(value.elo));
