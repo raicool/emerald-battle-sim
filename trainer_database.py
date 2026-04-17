@@ -6,14 +6,10 @@ import os
 import random
 import shutil
 import time
-import uuid
 from elo import calc_game_results
 import elo
 import log
-import names
-from poke_data import get_rand_trainer_class, get_trainer_pic_id
-from pokemon import construct_trainer_json, trainer, trainermon
-import utils
+from pokemon import construct_trainer_json, trainer
 
 BACKUP_DIRECTORY: str = "bak/"
 LAST_BAK_TIMESTAMP_FILE: str = BACKUP_DIRECTORY + "latest"

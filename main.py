@@ -3,14 +3,12 @@ from datetime import datetime
 import os
 import random
 import signal
-from uuid import uuid4
 from colorama import Fore
 from pygdbmi.gdbcontroller import GdbController
 import subprocess
 from battle_summary import summary
 import elo
 import gdb
-import leaderboard
 import log
 from sys import platform
 import shlex
@@ -114,7 +112,8 @@ def main():
 		
 		log.log_level = log.level.TRACE
 
-		_trainerdb.try_backup()
+		if (_trainerdb.try_backup()):
+			log.info(f"database backup successful at {datetime.now()}")
 
 		battle_count += 1
 

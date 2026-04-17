@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from datetime import datetime
 import json
 import os
-import shutil
 import uuid
 
 from pokemon import trainer
