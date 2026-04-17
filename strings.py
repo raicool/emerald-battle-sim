@@ -125,7 +125,7 @@ item: list[str] = [
 	"X Sp Atk",
 	"X Sp Def",
 	"X Speed",
-	"X Accuracy"
+	"X Accuracy",
 	"Dire Hit",
 	"Guard Spec",
 	"Poke Doll",
@@ -243,7 +243,7 @@ item: list[str] = [
 	"Clover Sweet",
 	"Flower Sweet",
 	"Star Sweet",
-	"Ribbon Sweet"
+	"Ribbon Sweet",
 	"Everstone",
 	"Red Nectar",
 	"Yellow Nectar",
@@ -286,7 +286,7 @@ item: list[str] = [
 	"Dragon Memory",
 	"Dark Memory",
 	"Steel Memory",
-	"Fairy Memory"
+	"Fairy Memory",
 	"Rusted Sword",
 	"Rusted Shield",
 	"Red Orb",
