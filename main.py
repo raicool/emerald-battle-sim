@@ -248,8 +248,8 @@ def main():
 
 				in_battle = False
 				log.trace(
-					f"\n(left: {left_wins} - right: {right_wins})\n"
-					f"\nelo_accuracy: {elo_accuracy:.0%}\n"
+					f"\n(left: {left_wins} - right: {right_wins})"
+					f"\nelo_accuracy: {elo_accuracy:.0%}"
 					)
 				os.kill(game_proc.pid, signal.SIGTERM)
 				debugger.exit()
