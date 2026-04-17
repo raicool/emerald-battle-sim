@@ -101,9 +101,9 @@ class trainer_database:
 			log.critical("attempted to recalculate db elo with invalid battle log file!\n\t^~~ file does not exist")
 			return
 		battle_log = open(log_path, "r+", encoding = "utf-16")
-		elo_json = open(elo.ELO_FILE, "r+", encoding = "utf-8")
+		elo_json = open(elo.ELO_FILE, "w+", encoding = "utf-8")
+		elo_json.truncate(0)
 		
-
 		for player in self.db.values():
 			# if you would like to set a value for all trainers in your database, this is where you would do it
 			player["battles"] = 0
@@ -154,7 +154,7 @@ class trainer_database:
 			self.db[loser_idx]["battles"] = new_elos[1].battles
 			self.db[loser_idx]["losses"] = new_elos[1].losses
 			self.db[loser_idx]["win_streak"] = 0
-			
+
 			elos[new_elos[1].id] = new_elos[1].elo
 
 			battle_count += 1
