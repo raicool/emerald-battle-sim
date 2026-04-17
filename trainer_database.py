@@ -110,50 +110,63 @@ class trainer_database:
 			player["elo"] = 1000
 
 		elos: dict[int, float] = {}
+		battle_count: int = 0
+		higher_elo_wins_count: int = 0
 		while split := battle_log.readline().rsplit():
 			if (len(split) < 2): continue
 			winner_uuid: str = split[0]
 			loser_uuid: str = split[1]
 
 			# get trainers from database
-			winner = self.find_trainer_index(winner_uuid)
-			loser = self.find_trainer_index(loser_uuid)
+			winner_idx: str = self.find_trainer_index(winner_uuid)
+			loser_idx: str = self.find_trainer_index(loser_uuid)
+			winner: trainer = self.trainer_from_uuid(winner_uuid)
+			loser: trainer = self.trainer_from_uuid(loser_uuid)
 
 			new_elos: tuple[trainer, trainer] = calc_game_results(
 				self.trainer_from_uuid(winner_uuid),
 				self.trainer_from_uuid(loser_uuid),
 				True
 			)
+			
 			if (len(split) >= 3):
 				timestamp: float = float(split[2])
 			else:
 				timestamp = 0
 
-			self.db[winner]["last_match"] = timestamp
-			self.db[winner]["elo"] = new_elos[0].elo
-			self.db[winner]["league"] = new_elos[0].league
-			self.db[winner]["battles"] = new_elos[0].battles
-			self.db[winner]["wins"] = new_elos[0].wins
+			self.db[winner_idx]["last_match"] = timestamp
+			self.db[winner_idx]["elo"] = new_elos[0].elo
+			self.db[winner_idx]["league"] = new_elos[0].league
+			self.db[winner_idx]["battles"] = new_elos[0].battles
+			self.db[winner_idx]["wins"] = new_elos[0].wins
 			elos[new_elos[0].id] = new_elos[0].elo
 
-			self.db[loser]["last_match"] = timestamp
-			self.db[loser]["elo"] = new_elos[1].elo
-			self.db[loser]["league"] = new_elos[1].league
-			self.db[loser]["battles"] = new_elos[1].battles
-			self.db[loser]["losses"] = new_elos[1].losses
+			self.db[loser_idx]["last_match"] = timestamp
+			self.db[loser_idx]["elo"] = new_elos[1].elo
+			self.db[loser_idx]["league"] = new_elos[1].league
+			self.db[loser_idx]["battles"] = new_elos[1].battles
+			self.db[loser_idx]["losses"] = new_elos[1].losses
 			elos[new_elos[1].id] = new_elos[1].elo
 
+			battle_count += 1
+			if (winner.elo > loser.elo):
+				higher_elo_wins_count += 1
+            
 			#log.debug(f"winner: {winner_uuid}\nloser: {loser_uuid}")
 		
+		elo_accuracy: float = float(higher_elo_wins_count) / float(battle_count)
 		# scuffed method of calculating player rank
-		
 		json.dump(elos, elo_json)
 		self.rank_trainers(elo_json)
 		elo_json.close()
 
 		self.serialize_json()
 		recalc_elapsed: float = time.perf_counter() - recalc_start
-		log.info(f"finished recalculate (took {recalc_elapsed} seconds.)", )
+		log.info(
+			f"\n\tfinished recalculate (took {recalc_elapsed} seconds.)"
+			f"\n\trecalculated {battle_count} battles"
+			f"\n\telo accuracy (% that higher elo player wins): {elo_accuracy:.0%}"
+			)
 
 	def try_backup(self):
 		last_backup_timestamp: int = -1
