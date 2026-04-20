@@ -44,7 +44,7 @@ def __set_elo(_trainer: trainer, delta: float):
 
 def calc_game_results(winner: trainer, loser: trainer, recalc: bool = False) -> tuple[trainer, trainer]:
 	if (recalc == False):
-		elo_dict: dict = utils.load_json(ELO_FILE, "r+")
+		elo_dict: dict = utils.load_json(ELO_FILE, "w+")
 
 	# calculate the chances of either player winning
 	winner_chance: float = 1 / (1 + math.pow(10, (loser.elo - winner.elo) / 400))

@@ -97,10 +97,13 @@ class trainer_database:
 		log.info("recalculating elo")
 
 		if (os.path.isfile(log_path) == False):
-			log.critical("attempted to recalculate db elo with invalid battle log file!\n\t^~~ file does not exist")
+			log.info("attempted to recalculate trainer database without battle_log.txt, creating file and skipping.")
+			battle_log = open(log_path, "w", encoding = "utf-16")
+			battle_log.close()
 			return
-		
-		battle_log = open(log_path, "r+", encoding = "utf-16")
+		else:
+			battle_log = open(log_path, "r+", encoding = "utf-16")
+
 		elo_json = open(elo.ELO_FILE, "w+", encoding = "utf-8")
 		elo_json.truncate(0)
 		
@@ -168,7 +171,11 @@ class trainer_database:
 			if (winner.elo > loser.elo):
 				higher_elo_wins_count += 1
 		
-		elo_accuracy: float = float(higher_elo_wins_count) / float(battle_count)
+		if (battle_count > 0):
+			elo_accuracy: float = float(higher_elo_wins_count) / float(battle_count)
+		else:
+			elo_accuracy: float = 0
+		
 		# scuffed method of calculating player rank
 		json.dump(elos, elo_json)
 		self.rank_trainers(elo_json)
