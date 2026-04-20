@@ -18,10 +18,9 @@ from utils import to_charmap_index
 DEFAULT_TRAINER_AI_FLAGS: int = __ai_flag.AI_FLAG_SMART_TRAINER | __ai_flag.AI_FLAG_KNOW_OPPONENT_PARTY
 # max char array size for a trainer's name ingame
 TRAINER_NAME_LENGTH: int = 10
-MAX_TRAINER_ITEMS: int = 4
 # chance of a shiny = 1 / SHINY_ODDS
-SHINY_ODDS: int = 40
-PLAYER_COUNT: int = 500
+SHINY_ODDS: int = 60
+PLAYER_COUNT: int = 100
 
 @dataclass
 class rng:
@@ -163,7 +162,7 @@ def gdb_partydata(side: int, data: trainer) -> str:
 			move_idx += 1
 		
 		ret += str(
-				f"set {poke_ptr}.heldItem = {party[i]["item"] + 1}\n"
+				f"set {poke_ptr}.heldItem = {party[i]["item"]}\n"
 				f"set {poke_ptr}.ability = {party[i]["ability"]}\n"
 				f"set {poke_ptr}.species = {party[i]["species"]}\n"
 				f"set {poke_ptr}.lvl = {party[i]["level"]}\n"

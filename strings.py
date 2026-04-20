@@ -431,7 +431,6 @@ item: list[str] = [
 	"Miracle Seed",
 	"Never Melt Ice",
 	"Black Belt",
-	"Blackbelt",
 	"Poison Barb",
 	"Soft Sand",
 	"Sharp Beak",
