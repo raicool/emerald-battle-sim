@@ -28,12 +28,17 @@
 </head>
 
 <body style="margin: 0px; padding: 0px; overflow: hidden">
-    <div class="markdown-body" style="max-width: 100%;">
-        <table style="width: 100%; border: 0; display: table;">
+    <div class="markdown-body" style="max-width: none; max-height: none;">
+        <table style="width: 100vw; height: 100vh; border: 0; display: table;">
+			<thead style="min-height: 15%;">
+				<td colspan="100%" style="text-align: center; font-size:32px;">
+					Emerald Battle Simulator Leaderboard
+				</td>
+			</thead>
             <tbody>
 				<tr>
-					<td style="width: 35%; padding: 0px; vertical-align: top;">
-						<table class="pokesprite" id="battle-log" ">
+					<td style="width: 35%; padding: 0px; vertical-align: top; overflow: hidden;">
+						<table class="pokesprite" id="battle-log">
 							<caption>Battle History</caption>
 							<thead>
 								<tr>
@@ -49,41 +54,41 @@
 								</tr>
 							</thead>
 							<tbody>
-
+								<!-- battle history rows go here -->
 							</tbody>
 						</table><button type="button">Button</button>
 					</td>
-					<td style="min-width: 65%; padding: 0px; vertical-align: top;">
-							<table class="pokesprite" id="leaderboard">
-								<caption>
-									<header>Emerald Battle Simulator Leaderboard</header><i>as of </i>
-								</caption>
-								<thead>
-									<tr>
-										<th class="order">Last Match</th>
-										<th class="order">Rank</th>
-										<th>Class</th>
-										<th class="order">Name</th>
-										<th>League</th>
-										<th class="order">UUID</th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th class="order">Points</th>
-										<th class="order">Wins</th>
-										<th class="order">Losses</th>
-										<th class="order">Win %</th>
-										<th class="order">Battles</th>
-										<th class="order">Win Streak</th>
-									</tr>
-								</thead>
-								<tbody>
-
-								</tbody>
-							</table>
+					<td style="width: 65%; padding: 0px; vertical-align: top;">
+						<table class="pokesprite" id="leaderboard">
+							<caption>
+								updated as as of <i id="refresh-timestamp"></i>
+							</caption>
+							<thead>
+								<tr>
+									<th class="order">Last Match</th>
+									<th class="order">Rank</th>
+									<th>Class</th>
+									<th class="order">Name</th>
+									<th>League</th>
+									<th class="order">UUID</th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th class="order">Points</th>
+									<th class="order">Wins</th>
+									<th class="order">Losses</th>
+									<th class="order">Win %</th>
+									<th class="order">Battles</th>
+									<th class="order">Win Streak</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- leaderboard player rows go here -->
+							</tbody>
+						</table>
 						<script type="module" src="leaderboard.js"></script>
 					</td>
 				</tr>

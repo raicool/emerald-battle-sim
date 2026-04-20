@@ -38,7 +38,7 @@ function sort_table(table, switch_mode = true)
 		.forEach(tr => tbody.appendChild(tr));
 }
 
-setInterval(read_dump_data, 5000) // 5 second interval
+setInterval(read_dump_data, 60000) // 5 second interval
 
 function add_cell_text(row, text, sort_val = null)
 {
@@ -160,7 +160,7 @@ function read_dump_data()
 				var body = table.tBodies[0];
 				
 				body.innerHTML = "";
-
+				var i = 0
 				for (const [, value] of Object.entries(data).reverse())
 				{
 					var row = body.insertRow();
@@ -187,10 +187,16 @@ function read_dump_data()
 
 					add_cell_text(row, `${Math.round(value.right_elo_final)} (${Math.round(value.right_elo_delta)})`);
 					add_cell_text(row, `${value.right_rank_final} (${value.right_rank_delta})`);
+					i++;
+					if (i >= 500) break;
 				}
 			}
 		}
 	)
+
+	var refresh_timestamp = document.getElementById("refresh-timestamp");
+	const d = new Date();
+	refresh_timestamp.innerHTML = d.toLocaleString();
 }
 
 function update_trainer_rows(data)
