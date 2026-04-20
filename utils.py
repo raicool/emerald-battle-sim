@@ -7,6 +7,7 @@ from res import charmap
 def load_json(path: str, mode: str = "w+") -> dict:
 	with open(path, mode, encoding='utf-8') as f:
 		if (os.stat(path).st_size > 0):
+			f.seek(0)
 			return json.load(f)
 		else:
 			return {}
