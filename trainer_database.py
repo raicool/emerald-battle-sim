@@ -183,6 +183,7 @@ class trainer_database:
 			)
 
 	def try_backup(self):
+		os.mkdir(BACKUP_DIRECTORY)
 		last_backup_timestamp: int = -1
 		if (os.path.isfile(LAST_BAK_TIMESTAMP_FILE) == True):
 			_file = open(LAST_BAK_TIMESTAMP_FILE, "r+", encoding = "utf-8")
