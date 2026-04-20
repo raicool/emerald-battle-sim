@@ -28,16 +28,18 @@
 </head>
 
 <body style="margin: 0px; padding: 0px; overflow: hidden">
-    <div class="markdown-body" style="max-width: none; max-height: none;">
+    <div class="markdown-body" style="max-width: none; max-height: none; table-layout: fixed">
         <table style="width: 100vw; height: 100vh; border: 0; display: table;">
-			<thead style="min-height: 15%;">
+			<thead style="height: 15%;">
 				<td colspan="100%" style="text-align: center; font-size:32px;">
 					Emerald Battle Simulator Leaderboard
+
+					<input type="checkbox" id="toggle"><code style="font-size:16px">Hide Battle History</code></input>
 				</td>
 			</thead>
             <tbody>
 				<tr>
-					<td style="width: 35%; padding: 0px; vertical-align: top; overflow: hidden;">
+					<td id="toggleable-column" style="min-width: 35%; padding: 0px; vertical-align: top;">
 						<table class="pokesprite" id="battle-log">
 							<caption>Battle History</caption>
 							<thead>
@@ -58,7 +60,7 @@
 							</tbody>
 						</table><button type="button">Button</button>
 					</td>
-					<td style="width: 65%; padding: 0px; vertical-align: top;">
+					<td id="leaderboard-cell" style="min-width: 65%; padding: 0px; vertical-align: top;">
 						<table class="pokesprite" id="leaderboard">
 							<caption>
 								updated as as of <i id="refresh-timestamp"></i>

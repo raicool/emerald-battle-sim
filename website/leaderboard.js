@@ -1,10 +1,17 @@
 import { read_file, comparer, timestamp_diff } from "./utility.js";
 import { pokemon, move_name, item, nature, ability } from "./constants.js";
 
+var script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-4.0.0.min.js';
+document.getElementsByTagName('head')[0].appendChild(script);
+
 const BOX_SPRITE_URL = "https://raw.githubusercontent.com/msikma/pokesprite/master/pokemon-gen7x/"
 const LEAGUE_SPRITE_URL = "https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/"
 
 var selected_header
+var tooltip = document.getElementById("pkmn-inspect")
+var toggle = document.getElementById("toggle")
+var leaderboard_cell = document.getElementById("leaderboard-cell") 
 
 document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => 
 {
@@ -13,7 +20,6 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
 	sort_table(table);
 })));
 
-var tooltip = document.getElementById("pkmn-inspect")
 
 const move = (e) => 
 {
@@ -24,11 +30,21 @@ const move = (e) =>
 	tooltip.style.top = (y + 16) + "px";
 };
 
+
+var toggleable_column = document.getElementById("toggleable-column")
+
+toggle.addEventListener("click", function() {
+	if (toggle.checked)
+		toggleable_column.style.display = "none"
+	else
+		toggleable_column.style.display = "inherit"
+});
+
+
 document.addEventListener("mousemove", (e) => 
 {
 	move(e);
 });
-
 
 function sort_table(table, switch_mode = true)
 {
@@ -90,7 +106,7 @@ function add_pkmn_image(row, src, pkmn_data, sort_val = null)
 		tooltip.style.visibility = "visible"
 		tooltip.innerHTML = 
 		"<pre>"+
-			`${pokemon[pkmn_data.species]}\n`
+			`${pokemon[pkmn_data.species]}\n` +
 			`Level: ${pkmn_data.level}\n`+
 			`Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
 			`Item: ${item[pkmn_data.item + 3]}\n`+
