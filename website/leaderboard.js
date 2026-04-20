@@ -109,7 +109,7 @@ function add_pkmn_image(row, src, pkmn_data, sort_val = null)
 			`${pokemon[pkmn_data.species]}\n` +
 			`Level: ${pkmn_data.level}\n`+
 			`Shiny: ${pkmn_data.shiny ? "Yes" : "No"}\n`+
-			`Item: ${item[pkmn_data.item + 3]}\n`+
+			`Item: ${item[pkmn_data.item]}\n`+
 			`Ability: ${ability[pkmn_data.ability]}\n`+
 			`Nature: ${nature[pkmn_data.nature]}\n`+
 			"Moves:\n"+

@@ -163,7 +163,7 @@ def gdb_partydata(side: int, data: trainer) -> str:
 			move_idx += 1
 		
 		ret += str(
-				f"set {poke_ptr}.heldItem = {party[i]["item"] + 2}\n"
+				f"set {poke_ptr}.heldItem = {party[i]["item"] + 1}\n"
 				f"set {poke_ptr}.ability = {party[i]["ability"]}\n"
 				f"set {poke_ptr}.species = {party[i]["species"]}\n"
 				f"set {poke_ptr}.lvl = {party[i]["level"]}\n"
