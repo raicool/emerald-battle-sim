@@ -10,10 +10,11 @@ class level(IntEnum):
     # storted by importance, increasing
     DEBUG = 0
     TRACE = 1
-    CRITICAL = 2
-    FATAL = 3
-    INFO = 4
-    NONE = 5
+    WARNING = 2
+    CRITICAL = 3
+    FATAL = 4
+    INFO = 5
+    NONE = 6
 
 current_file_buffer: IO[str] = IO()
 log_level: int = level.TRACE
@@ -32,6 +33,11 @@ def trace(msg: str):
     global log_level
     if (log_level <= level.TRACE):
         __printlog(msg, Fore.CYAN)
+
+def warning(msg: str):
+    global log_level
+    if (log_level <= level.WARNING):
+        __printlog(msg, Fore.YELLOW)
 
 def critical(msg: str):
     global log_level
