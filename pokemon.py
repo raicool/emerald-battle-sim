@@ -292,6 +292,11 @@ def main():
 		os.mkdir("dump")
 	backup()
 	json_response = fetch_sets()
+
+	avail_species: list[int] = []
+	for pkmn_name in json_response:
+		avail_species.append(strings.pokemon.index(pkmn_name))
+
 	trainers_json = open("dump/trainers.json", "w+")
 	trainers_txt = open("dump/trainers.txt", "w+")
 	trainer_mons_txt = open("dump/trainer_mons.txt", "w+")
@@ -317,8 +322,10 @@ def main():
 		else:
 			test_trainer.name = random.choice(names.female)
 
+		random.shuffle(avail_species)
+		
 		for i in range(6):
-			new_pkmn = generate_pkmn(json_response)
+			new_pkmn: trainermon = generate_pkmn(json_response, avail_species[i])
 			test_trainer.party.append(new_pkmn.json_serialize())
 		
 		trainers[_] = construct_trainer_json(test_trainer)
