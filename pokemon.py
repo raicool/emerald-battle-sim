@@ -250,7 +250,7 @@ def generate_pkmn(pkmn_database: dict, pokemon_id: int = -1) -> trainermon:
 
 def fetch_sets() -> dict:
 	log.trace("fetching smogon gen 3 sets")
-	response = requests.get("https://pkmn.github.io/smogon/data/sets/gen3.json")
+	response = requests.get("https://pkmn.github.io/smogon/data/sets/gen5.json")
 	return response.json()
 
 def construct_trainer_json(_trainer: trainer):
@@ -287,7 +287,7 @@ def backup():
 		os.rename(src_path, dst_path)
 
 def main():
-	log.log_level = log.level.NONE
+	log.log_level = log.level.WARNING
 	if (os.path.exists("dump") == False):
 		os.mkdir("dump")
 	backup()
@@ -295,6 +295,9 @@ def main():
 
 	avail_species: list[int] = []
 	for pkmn_name in json_response:
+		if (pkmn_name not in strings.pokemon):
+			log.warning(f"{pkmn_name} not found in pokemon strings list, will not be included in generated trainer parties.")
+			continue
 		avail_species.append(strings.pokemon.index(pkmn_name))
 
 	trainers_json = open("dump/trainers.json", "w+")

@@ -16,7 +16,7 @@ function get_url_param(sParam)
 
 var player_id = get_url_param("id");
 
-read_file("trainers.json", function(file)
+read_file("../dump/trainers.json", function(file)
 {
 	var data = JSON.parse(file);
 	
