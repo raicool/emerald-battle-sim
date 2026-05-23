@@ -3,6 +3,7 @@ from datetime import datetime
 import os
 import random
 import signal
+import time
 from colorama import Fore
 from pygdbmi.gdbcontroller import GdbController
 import subprocess
@@ -25,7 +26,7 @@ ELF_BINARY_PATH: str = "res/pokeemerald.elf"
 ELF_LINKER_MAP_PATH: str = "res/pokeemerald.map"
 FRAME_SIZE: int = 4
 
-SELF_TRAINER_ID: str = "e3665f60-4e12-4306-a77b-f19149d3166c"
+SELF_TRAINER_ID: str = ""
 SELF_BATTLE_ENABLE: bool = False
 
 GAME_FASTFORWARD: bool = True
@@ -81,8 +82,8 @@ def write_battle_log(winner: trainer, loser: trainer, previous_elo: tuple[float,
 	f.close()
 
 def log_trainer_introduction(left: trainer, right: trainer):
-	left_card: str = str(f"{left.name} ({int(left.elo)}, Rank {left.rank})") 
-	right_card: str = str(f"{right.name} ({int(right.elo)}, Rank {right.rank})") 
+	left_card: str = str(f"{left.name} ({int(left.elo)}, {"Unranked" if (left.rank == 0) else "Rank " + str(left.rank)})") 
+	right_card: str = str(f"{right.name} ({int(right.elo)}, {"Unranked" if (right.rank == 0) else "Rank " + str(right.rank)})") 
 	log.info(
 			"\n----------------------------------------------------------------------------"
 		   f"\n{left_card:^36} vs {right_card:^36}"
@@ -192,6 +193,7 @@ def main():
 			timeout = 0.5
 			)
 		
+		battle_start: float = time.perf_counter()
 		while (in_battle):
 			# veery hacky way of figuring out the battle winner
 			# i hate using gdb
@@ -203,11 +205,24 @@ def main():
 				in_battle = False
 				break
 
-			if (len(response) == 0): continue
+			battle_elapsed: float = time.perf_counter() - battle_start
+			if (battle_elapsed >= 420): # 7 mins
+				log.warning("7 minutes have passed. assuming this is a softlock and ending in a draw!")
+				in_battle = False
+				battle.finalize(trainer_left, trainer_right, __BattleOutcomeWinner.BATTLE_OUTCOME_WINNER_DRAW)
+				os.kill(game_proc.pid, signal.SIGTERM)
+				debugger.exit()
+				continue
+
+			if (len(response) == 0): 
+				log.trace('delay')
+				time.sleep(5)
+				continue
 
 			try:
 				payload = response[1].get("payload", "")
 			except IndexError:
+				time.sleep(5)
 				continue
 
 			if (type(payload) is str):
@@ -254,7 +269,7 @@ def main():
 				os.kill(game_proc.pid, signal.SIGTERM)
 				debugger.exit()
 			else:
-				sleep(1)
+				time.sleep(5)
 
 def end_battle(winner: trainer, loser: trainer):
 	global _trainerdb
